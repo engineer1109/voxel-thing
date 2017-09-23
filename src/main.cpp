@@ -97,27 +97,42 @@ int main(void) {
     float triWidth = 0.9f;
     float triHeight = 0.5f;
 
-    float vertices[] = {
+    float vertices1[] = {
         // Tri 1
         -triWidth, -triHeight, 0.0f,
         0.0f, -triHeight, 0.0f,
-        -triWidth/2, triHeight, 0.0f,
+        -triWidth/2, triHeight, 0.0f
+    };
+
+    float vertices2[] = {
         // Tri 2
         0.0f, -triHeight, 0.0f,
         triWidth, -triHeight, 0.0f,
         triWidth/2, triHeight, 0.0f
     };
 
-    unsigned int VBO, VAO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
+    unsigned int VBO1, VAO1;
+    glGenVertexArrays(1, &VAO1);
+    glGenBuffers(1, &VBO1);
 
-    glBindVertexArray(VAO);
+    glBindVertexArray(VAO1);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO1);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices1), vertices1, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    unsigned int VBO2, VAO2;
+    glGenVertexArrays(1, &VAO2);
+    glGenBuffers(1, &VBO2);
+
+    glBindVertexArray(VAO2);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO2);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
     glEnableVertexAttribArray(0);
 
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -129,16 +144,24 @@ int main(void) {
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shaderProgram);
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        glBindVertexArray(VAO1);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
+
+        glBindVertexArray(VAO2);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
         // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
+    glDeleteVertexArrays(1, &VAO1);
+    glDeleteBuffers(1, &VBO1);
+    glDeleteVertexArrays(1, &VAO2);
+    glDeleteBuffers(1, &VBO2);
+
 
     glfwTerminate();
 
