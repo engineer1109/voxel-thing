@@ -4,17 +4,22 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 const char *vertexShaderSource = "#version 330 core\n"
 "layout (location = 0) in vec3 aPos;\n"
+"out vec4 vertexColor;\n"
 "void main() {\n"
 "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+"   vertexColor = vec4(0.5f, 0.5f, 0.5f, 1.0f);\n"
 "}";
 
 const char *fragmentShaderSource = "#version 330 core\n"
 "out vec4 FragColor;\n"
+"in vec4 vertexColor;\n"
+"uniform vec4 ourColor;\n"
 "void main() {\n"
-"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+"   FragColor = ourColor*vertexColor;\n"
 "}";
 
 void framebufferSizeCallback(GLFWwindow *window, int width, int height) {
@@ -143,11 +148,16 @@ int main(void) {
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        float time = glfwGetTime();
+        float green = sin(time)/2 + 0.5f;
+        float red = cos(time)/4 + 0.5f;
+        int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+
         glUseProgram(shaderProgram);
+        glUniform4f(vertexColorLocation, red, green, 1.0f, 1.0f);
 
         glBindVertexArray(VAO1);
         glDrawArrays(GL_TRIANGLES, 0, 3);
-
 
         glBindVertexArray(VAO2);
         glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -161,7 +171,6 @@ int main(void) {
     glDeleteBuffers(1, &VBO1);
     glDeleteVertexArrays(1, &VAO2);
     glDeleteBuffers(1, &VBO2);
-
 
     glfwTerminate();
 
