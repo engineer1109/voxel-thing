@@ -16,11 +16,12 @@ else()
 endif()
 
 include_directories(
+    ./includes/
     ./vendor/glad/include/
     ./vendor/glfw/include/)
 
 file(GLOB VENDORS_SOURCES vendor/glad/src/glad.c)
-file(GLOB PROJECT_HEADERS ./include/*.hpp)
+file(GLOB PROJECT_HEADERS ./includes/*.hpp)
 file(GLOB PROJECT_SOURCES ./src/*.cpp)
 file(GLOB PROJECT_CONFIGS CMakeLists.txt
     README.md
