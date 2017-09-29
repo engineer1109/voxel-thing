@@ -35,6 +35,10 @@ void Shader::use() {
   glUseProgram(ID);
 }
 
+void Shader::setInt(const std::string &name, int val) {
+  glUniform1i(glGetUniformLocation(ID, name.c_str()), val);
+}
+
 unsigned int Shader::compile(const char* code, unsigned int type) {
   unsigned int shader = glCreateShader(type);
 

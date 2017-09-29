@@ -48,6 +48,8 @@ int main(void) {
   Shader def("shaders/default.vs", "shaders/default.fs");
   def.use();
 
+	stbi_set_flip_vertically_on_load(true);
+
   unsigned int texture;
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
@@ -69,11 +71,33 @@ int main(void) {
 
   stbi_image_free(data);
 
+  unsigned int texture2;
+  glGenTextures(1, &texture2);
+  glBindTexture(GL_TEXTURE_2D, texture2);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); 
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  data = stbi_load("img/awesomeface.png", &width, &height, &nChannels, 0);
+
+  if (data) {
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+  } else {
+    std::cout << "Failed to load image" << std::endl;
+  }
+
+  stbi_image_free(data);
+
+  def.setInt("texture2", 1);
+
   float vertices[] = {
     0.5f, 0.5f, 0.0f,     1.0f, 0.0f, 0.0f,   1.0f, 1.0f,
     0.5f, -0.5f, 0.0f,    0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
     -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
-    -0.5f, 0.5f, 0.0f,    0.0f, 0.0f, 0.0f,   0.0f, 1.0f
+    -0.5f, 0.5f, 0.0f,    1.0f, 1.0f, 1.0f,   0.0f, 1.0f
   };
 
   unsigned int indices[] = {
@@ -111,7 +135,11 @@ int main(void) {
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texture2);
+
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
