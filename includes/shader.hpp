@@ -5,14 +5,12 @@
 
 #include <string>
 
-
 class Shader {
   public:
     Shader(const char* vertexPath, const char* fragmentPath);
 
     void use();
 
-    void setBool(const std::string &name, bool val);
     void setInt(const std::string &name, int val);
     void setFloat(const std::string &name, float val);
 

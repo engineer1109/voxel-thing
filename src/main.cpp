@@ -8,6 +8,10 @@
 #include <math.h>
 
 #include <shader.hpp>
+#include <math_utils.hpp>
+
+float mix = 0.5f;
+float mixSpeed = 0.025f;
 
 void framebufferSizeCallback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
@@ -17,6 +21,20 @@ void processInput(GLFWwindow *window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
   }
+
+  float mod = 0.0f;
+
+  if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+    mod += mixSpeed;
+
+    std::cout << "Pressed! " << mix << std::endl;
+  }
+
+  if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+    mod -= mixSpeed;
+  }
+
+  mix = clamp(mix + mod, 0.0f, 1.0f);
 }
 
 int main(void) {
@@ -92,6 +110,7 @@ int main(void) {
   stbi_image_free(data);
 
   def.setInt("texture2", 1);
+  def.setInt("mixRatio", mix);
 
   float vertices[] = {
     0.5f, 0.5f, 0.0f,     1.0f, 0.0f, 0.0f,   1.0f, 1.0f,
@@ -131,6 +150,7 @@ int main(void) {
 
   while (!glfwWindowShouldClose(window)) {
     processInput(window);
+    def.setFloat("mixRatio", mix);
 
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -145,6 +165,8 @@ int main(void) {
 
     glfwSwapBuffers(window);
     glfwPollEvents();
+
+    std::cout << mix << std::endl;
   }
 
   glDeleteVertexArrays(1, &VAO);
