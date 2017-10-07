@@ -13,6 +13,7 @@ class Shader {
 
     void setInt(const std::string &name, int val);
     void setFloat(const std::string &name, float val);
+    void setMatrix(const std::string &name, float *val);
 
     unsigned int ID;
   private:

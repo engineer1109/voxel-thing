@@ -43,6 +43,10 @@ void Shader::setFloat(const std::string &name, float val) {
   glUniform1f(glGetUniformLocation(ID, name.c_str()), val);
 }
 
+void Shader::setMatrix(const std::string &name, float *val) {
+  glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, val);
+}
+
 unsigned int Shader::compile(const char* code, unsigned int type) {
   unsigned int shader = glCreateShader(type);
 

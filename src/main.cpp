@@ -2,6 +2,10 @@
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
@@ -150,7 +154,14 @@ int main(void) {
 
   while (!glfwWindowShouldClose(window)) {
     processInput(window);
+
     def.setFloat("mixRatio", mix);
+
+    glm::mat4 transform;
+    transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+    transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(1.0f, 1.0f, 0.0f));
+
+    def.setMatrix("transform", glm::value_ptr(transform));
 
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
