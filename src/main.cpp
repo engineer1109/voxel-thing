@@ -13,9 +13,7 @@
 
 #include <shader.hpp>
 #include <math_utils.hpp>
-
-float mix = 0.5f;
-float mixSpeed = 0.025f;
+#include <data.hpp>
 
 void framebufferSizeCallback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
@@ -25,20 +23,6 @@ void processInput(GLFWwindow *window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
   }
-
-  float mod = 0.0f;
-
-  if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-    mod += mixSpeed;
-
-    std::cout << "Pressed! " << mix << std::endl;
-  }
-
-  if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-    mod -= mixSpeed;
-  }
-
-  mix = clamp(mix + mod, 0.0f, 1.0f);
 }
 
 int main(void) {
@@ -63,6 +47,7 @@ int main(void) {
     return -1;
   }
 
+  glEnable(GL_DEPTH_TEST);
   glViewport(0, 0, 800, 600);
 
   glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
@@ -70,7 +55,7 @@ int main(void) {
   Shader def("shaders/default.vs", "shaders/default.fs");
   def.use();
 
-	stbi_set_flip_vertically_on_load(true);
+  stbi_set_flip_vertically_on_load(true);
 
   unsigned int texture;
   glGenTextures(1, &texture);
@@ -113,58 +98,41 @@ int main(void) {
 
   stbi_image_free(data);
 
-  def.setInt("texture2", 1);
-  def.setInt("mixRatio", mix);
-
-  float vertices[] = {
-    0.5f, 0.5f, 0.0f,     1.0f, 0.0f, 0.0f,   1.0f, 1.0f,
-    0.5f, -0.5f, 0.0f,    0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
-    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
-    -0.5f, 0.5f, 0.0f,    1.0f, 1.0f, 1.0f,   0.0f, 1.0f
-  };
-
-  unsigned int indices[] = {
-    0, 1, 3, // first triangle
-    1, 2, 3  // second triangle
-  };
-
-  unsigned int VBO, VAO, EBO;
+  unsigned int VBO, VAO;
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
-  glGenBuffers(1, &EBO);
 
   glBindVertexArray(VAO);
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
 
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3*sizeof(float)));
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3*sizeof(float)));
   glEnableVertexAttribArray(1);
-
-  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6*sizeof(float)));
-  glEnableVertexAttribArray(2);
 
   // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   while (!glfwWindowShouldClose(window)) {
     processInput(window);
 
-    def.setFloat("mixRatio", mix);
+    glm::mat4 model;
+    model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 1.0f, 1.0f));
 
-    glm::mat4 transform;
-    transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-    transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(1.0f, 1.0f, 0.0f));
+    glm::mat4 view;
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
-    def.setMatrix("transform", glm::value_ptr(transform));
+    glm::mat4 projection;
+    projection = glm::perspective(glm::radians(45.0f), 800.0f/600.0f, 0.1f, 100.0f);
+
+    def.setMatrix("model", glm::value_ptr(model));
+    def.setMatrix("view", glm::value_ptr(view));
+    def.setMatrix("projection", glm::value_ptr(projection));
 
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -172,12 +140,11 @@ int main(void) {
     glBindTexture(GL_TEXTURE_2D, texture2);
 
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    // glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
 
     glfwSwapBuffers(window);
     glfwPollEvents();
-
-    std::cout << mix << std::endl;
   }
 
   glDeleteVertexArrays(1, &VAO);
