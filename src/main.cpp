@@ -72,7 +72,7 @@ void mouseCallback(GLFWwindow *window, double x, double y) {
   double xOffset = lastMouseX - x;
   double yOffset = lastMouseY - y;
 
-  double sensitivity = 0.5;
+  double sensitivity = 0.05;
 
   yaw  -= xOffset * sensitivity;
   pitch += yOffset * sensitivity;
