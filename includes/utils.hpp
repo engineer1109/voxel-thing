@@ -3,4 +3,6 @@
 
 float clamp(float x, float upper, float lower);
 
+float rgbToGl(float v);
+
 #endif

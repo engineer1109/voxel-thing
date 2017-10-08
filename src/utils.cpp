@@ -7,3 +7,7 @@ float clamp(float x, float lower, float upper) {
 
   return x;
 }
+
+float rgbToGl(float v) {
+    return v/255;
+}
