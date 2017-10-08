@@ -77,7 +77,7 @@ void mouseCallback(GLFWwindow *window, double x, double y) {
   yaw  -= xOffset * sensitivity;
   pitch += yOffset * sensitivity;
 
-  pitch = clamp(pitch, -45.0f, 90.0f);
+  pitch = clamp(pitch, -45.0f, 89.09f);
 
   glm::vec3 front;
 
