@@ -19,6 +19,22 @@
 const float SCREEN_WIDTH=800.0f;
 const float SCREEN_HEIGHT=600.0f;
 
+float lastTime;
+float deltaTime;
+
+float cameraSpeed = 5.0f;
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, -3.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+double lastMouseX = SCREEN_WIDTH/2;
+double lastMouseY = SCREEN_HEIGHT/2;
+
+float pitch = 0;
+float yaw = 0;
+
+bool firstMouse = false;
+
 void framebufferSizeCallback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
 }
@@ -27,6 +43,52 @@ void processInput(GLFWwindow *window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
   }
+
+  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+    cameraPos += cameraSpeed * deltaTime * cameraFront;
+  }
+
+  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+    cameraPos -= cameraSpeed * deltaTime * cameraFront;
+  }
+
+  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+    cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltaTime;
+  }
+
+  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+    cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltaTime;
+  }
+}
+
+void mouseCallback(GLFWwindow *window, double x, double y) {
+  if (firstMouse) {
+    lastMouseX = x;
+    lastMouseY = y;
+
+    firstMouse = false;
+  }
+
+  double xOffset = lastMouseX - x;
+  double yOffset = lastMouseY - y;
+
+  double sensitivity = 0.5;
+
+  yaw  -= xOffset * sensitivity;
+  pitch += yOffset * sensitivity;
+
+  pitch = clamp(pitch, -45.0f, 90.0f);
+
+  glm::vec3 front;
+
+  front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+  front.y = sin(glm::radians(pitch));
+  front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+
+  cameraFront = glm::normalize(front);
+
+  lastMouseX = x;
+  lastMouseY = y;
 }
 
 int main(void) {
@@ -55,7 +117,9 @@ int main(void) {
   glEnable(GL_DEPTH_TEST);
   glViewport(0, 0, SCREEN_WIDTH, SCREEN_WIDTH);
 
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
   glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+  glfwSetCursorPosCallback(window, mouseCallback);
 
   Shader def("shaders/default.vs", "shaders/default.fs");
   def.use();
@@ -112,10 +176,16 @@ int main(void) {
       glm::vec3(-1.0f, -2.0f, -5.0f),
       glm::vec3(0.0f, -2.0f, -6.0f),
       glm::vec3(1.0f, -2.0f, -6.0f),
-      glm::vec3(-1.0f, -2.0f, -6.0f)
+      glm::vec3(-1.0f, -2.0f, -6.0f),
+      glm::vec3(0.0f, -2.0f, -7.0f),
+      glm::vec3(1.0f, -2.0f, -7.0f),
+      glm::vec3(-1.0f, -1.0f, -7.0f)
   };
 
   while (!glfwWindowShouldClose(window)) {
+    deltaTime = (float) glfwGetTime() - lastTime;
+    lastTime = (float) glfwGetTime();
+
     processInput(window);
 
     glClearColor(rgbToGl(49), rgbToGl(198), rgbToGl(247), 1.0f);
@@ -126,15 +196,15 @@ int main(void) {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    glm::mat4 view;
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+    glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f);
+
     def.setMatrix("view", glm::value_ptr(view));
     def.setMatrix("projection", glm::value_ptr(projection));
 
-    for(unsigned int i = 0; i < 12; i++) {
+    for(unsigned int i = 0; i < 15; i++) {
         glm::mat4 model;
         model = glm::translate(model, cubes[i]);
 
