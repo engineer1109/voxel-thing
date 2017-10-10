@@ -13,6 +13,7 @@
 #include <math.h>
 
 #include <shader.hpp>
+#include <world_builder.hpp>
 #include <utils.hpp>
 #include <data.hpp>
 
@@ -33,7 +34,7 @@ double lastMouseY = SCREEN_HEIGHT/2;
 float pitch = 0;
 float yaw = 0;
 
-bool firstMouse = false;
+bool firstMouse = true;
 
 void framebufferSizeCallback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
@@ -149,6 +150,11 @@ int main(void) {
 
   stbi_image_free(data);
 
+
+  WorldBuilder wb;
+
+  std::vector<float> mesh = wb.mesh();
+
   unsigned int VBO, VAO;
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
@@ -156,14 +162,14 @@ int main(void) {
   glBindVertexArray(VAO);
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, mesh.size() * sizeof(float), &mesh.front(), GL_STATIC_DRAW);
 
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
 
   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3*sizeof(float)));
   glEnableVertexAttribArray(1);
-
+/*
   glm::vec3 cubes[] = {
       glm::vec3(0.0f, -2.0f, -3.0f),
       glm::vec3(1.0f, -2.0f, -3.0f),
@@ -180,7 +186,7 @@ int main(void) {
       glm::vec3(0.0f, -2.0f, -7.0f),
       glm::vec3(1.0f, -2.0f, -7.0f),
       glm::vec3(-1.0f, -1.0f, -7.0f)
-  };
+  };*/
 
   while (!glfwWindowShouldClose(window)) {
     deltaTime = (float) glfwGetTime() - lastTime;
@@ -201,16 +207,14 @@ int main(void) {
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f);
 
+    glm::mat4 model;
+    model = glm::translate(model, glm::vec3(0.0f, -3.0f, 0.0f));
+
     def.setMatrix("view", glm::value_ptr(view));
     def.setMatrix("projection", glm::value_ptr(projection));
+    def.setMatrix("model", glm::value_ptr(model));
 
-    for(unsigned int i = 0; i < 15; i++) {
-        glm::mat4 model;
-        model = glm::translate(model, cubes[i]);
-
-        def.setMatrix("model", glm::value_ptr(model));
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-    }
+    glDrawArrays(GL_TRIANGLES, 0, mesh.size()/5);
 
     glfwSwapBuffers(window);
     glfwPollEvents();
