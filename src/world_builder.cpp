@@ -37,6 +37,16 @@ std::vector<float> WorldBuilder::addSide(glm::vec3 pos, BlockSide side) {
     glm::vec3(-0.5f,  0.5f, -0.5f) // top left
   };
 
+  std::vector<glm::vec2> uvs = {
+    glm::vec2(1.0f, 0.0f),
+    glm::vec2(1.0f, 1.0f),
+    glm::vec2(0.0f, 0.0f),
+
+    glm::vec2(1.0f, 1.0f),
+    glm::vec2(0.0f, 1.0f),
+    glm::vec2(0.0f, 0.0f)
+  };
+
   glm::vec3 rotateAround;
   float rotateBy;
 
@@ -91,9 +101,11 @@ std::vector<float> WorldBuilder::addSide(glm::vec3 pos, BlockSide side) {
     verts.push_back(vert.y);
     verts.push_back(vert.z);
 
+    glm::vec2 uv = uvs[i];
+
     // uv map
-    verts.push_back(0.0f);
-    verts.push_back(1.0f);
+    verts.push_back(uv.x);
+    verts.push_back(uv.y);
   }
 
   return verts;
