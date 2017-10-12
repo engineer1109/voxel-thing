@@ -4,23 +4,30 @@
 
 #include <glm/gtx/rotate_vector.hpp>
 
-std::vector<float> WorldBuilder::mesh() {
-  glm::vec3 pos(0.0f, 0.0f, 0.0f);
+WorldBuilder::WorldBuilder() {}
 
+std::vector<float> WorldBuilder::mesh() {
   std::vector<float> mesh;
 
-  std::vector<BlockSide> sides = {
-    TOP,
-    BOTTOM,
-    LEFT,
-    RIGHT,
-    FRONT,
-    BACK
-  };
+  for (int y = 0; y < CHUNK_HEIGHT; y++) {
+    for (int z = 0; z < CHUNK_DEPTH; z++) {
+      for (int x = 0; x < CHUNK_WIDTH; x++) {
+        int v = chunkData[y][z][x];
+        if (v != SOLID) {
+          continue;
+        }
 
-  for (int i = 0; i < sides.size(); i++) {
-    std::vector<float>face = addSide(pos, sides[i]);
-    mesh.insert(mesh.end(), face.begin(), face.end());
+        glm::vec3 pos((float) x, (float) y, (float) z);
+
+        std::vector<BlockSide> sides = neededSidesAt(pos);
+
+        for (int i = 0; i < sides.size(); i++) {
+          std::vector<float>face = addSide(pos, sides[i]);
+
+          mesh.insert(mesh.end(), face.begin(), face.end());
+        }
+      }
+    }
   }
 
   return mesh;
@@ -109,4 +116,70 @@ std::vector<float> WorldBuilder::addSide(glm::vec3 pos, BlockSide side) {
   }
 
   return verts;
+}
+
+bool WorldBuilder::emptyToThe(glm::vec3 index, BlockSide side) {
+  switch (side) {
+    case TOP:
+      index.y += 1;
+
+      break;
+    case BOTTOM:
+      index.y -= 1;
+
+      break;
+    case LEFT:
+      index.x += 1;
+
+      break;
+    case RIGHT:
+      index.x -= 1;
+
+      break;
+    case FRONT:
+      index.z -= 1;
+
+      break;
+    case BACK:
+      index.z += 1;
+
+      break;
+    default:
+      throw "fuck this";
+  }
+
+  if (index.x < 0 || index.y < 0 || index.z < 0) {
+    return true;
+  }
+
+  if (index.x > CHUNK_WIDTH - 1 || index.y > CHUNK_HEIGHT - 1 || index.z > CHUNK_DEPTH - 1) {
+    return true;
+  }
+
+  return chunkData[(int)index.y][(int)index.z][(int)index.x] == EMPTY;
+}
+
+std::vector<BlockSide> WorldBuilder::neededSidesAt(glm::vec3 index) {
+  std::vector<BlockSide> possibleSides = {
+    TOP,
+    BOTTOM,
+    LEFT,
+    RIGHT,
+    FRONT,
+    BACK
+  };
+
+  std::vector<BlockSide> sides;
+
+  for (int i = 0; i < possibleSides.size(); i++) {
+    BlockSide side = possibleSides[i];
+
+    if (!emptyToThe(index, side)) {
+      continue;
+    }
+
+    sides.push_back(side);
+  }
+
+  return sides;
 }
