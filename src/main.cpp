@@ -116,6 +116,9 @@ int main(void) {
   }
 
   glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
+
+  glCullFace(GL_BACK);  
   glViewport(0, 0, SCREEN_WIDTH, SCREEN_WIDTH);
 
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
