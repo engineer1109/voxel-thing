@@ -169,24 +169,6 @@ int main(void) {
 
   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3*sizeof(float)));
   glEnableVertexAttribArray(1);
-/*
-  glm::vec3 cubes[] = {
-      glm::vec3(0.0f, -2.0f, -3.0f),
-      glm::vec3(1.0f, -2.0f, -3.0f),
-      glm::vec3(-1.0f, -2.0f, -3.0f),
-      glm::vec3(0.0f, -2.0f, -4.0f),
-      glm::vec3(1.0f, -2.0f, -4.0f),
-      glm::vec3(-1.0f, -2.0f, -4.0f),
-      glm::vec3(0.0f, -2.0f, -5.0f),
-      glm::vec3(1.0f, -2.0f, -5.0f),
-      glm::vec3(-1.0f, -2.0f, -5.0f),
-      glm::vec3(0.0f, -2.0f, -6.0f),
-      glm::vec3(1.0f, -2.0f, -6.0f),
-      glm::vec3(-1.0f, -2.0f, -6.0f),
-      glm::vec3(0.0f, -2.0f, -7.0f),
-      glm::vec3(1.0f, -2.0f, -7.0f),
-      glm::vec3(-1.0f, -1.0f, -7.0f)
-  };*/
 
   while (!glfwWindowShouldClose(window)) {
     deltaTime = (float) glfwGetTime() - lastTime;
