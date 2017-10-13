@@ -16,6 +16,7 @@
 #include <world_builder.hpp>
 #include <utils.hpp>
 #include <data.hpp>
+#include <texture.hpp>
 
 const float SCREEN_WIDTH=800.0f;
 const float SCREEN_HEIGHT=600.0f;
@@ -130,29 +131,7 @@ int main(void) {
 
   stbi_set_flip_vertically_on_load(true);
 
-  unsigned int texture;
-  glGenTextures(1, &texture);
-  glBindTexture(GL_TEXTURE_2D, texture);
-
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  int width, height, nChannels;
-  unsigned char* data = stbi_load("img/dirt.jpg", &width, &height, &nChannels, 0);
-
-  if (data) {
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-  } else {
-    std::cout << "Failed to load image" << std::endl;
-
-    return -1;
-  }
-
-  stbi_image_free(data);
-
+  Texture tex("img/dirt.jpg");
 
   WorldBuilder wb;
 
@@ -182,11 +161,6 @@ int main(void) {
     glClearColor(rgbToGl(49), rgbToGl(198), rgbToGl(247), 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glBindVertexArray(VAO);
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);
-
     glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
     glm::mat4 projection;
@@ -199,6 +173,9 @@ int main(void) {
     def.setMatrix("projection", glm::value_ptr(projection));
     def.setMatrix("model", glm::value_ptr(model));
 
+    tex.use();
+
+    glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, mesh.size()/5);
 
     glfwSwapBuffers(window);
