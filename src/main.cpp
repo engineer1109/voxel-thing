@@ -13,7 +13,7 @@
 #include <math.h>
 
 #include <shader.hpp>
-#include <world_builder.hpp>
+#include <chunk.hpp>
 #include <utils.hpp>
 #include <data.hpp>
 #include <texture.hpp>
@@ -117,40 +117,54 @@ int main(void) {
   }
 
   glEnable(GL_DEPTH_TEST);
-  glEnable(GL_CULL_FACE);
+  // glEnable(GL_CULL_FACE);
 
-  glCullFace(GL_BACK);  
+  // glCullFace(GL_BACK);  
   glViewport(0, 0, SCREEN_WIDTH, SCREEN_WIDTH);
 
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
   glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
   glfwSetCursorPosCallback(window, mouseCallback);
 
-  Shader def("shaders/default.vs", "shaders/default.fs");
-  def.use();
+  Shader def("shaders/default.vert", "shaders/default.frag");
+  Shader lightingShader("shaders/lighting.vert", "shaders/lighting.frag");
 
   stbi_set_flip_vertically_on_load(true);
 
-  Texture tex("img/dirt.jpg");
+  std::vector<glm::vec3> pos = {
+    glm::vec3(0, -1, 0),
+    glm::vec3(-CHUNK_WIDTH, -1, 0),
+    glm::vec3(CHUNK_WIDTH, -1, 0),
+    glm::vec3(0, -1, -CHUNK_DEPTH),
+    glm::vec3(0, -1, CHUNK_DEPTH),
+  };
 
-  WorldBuilder wb;
+  Chunk chunk;
+  std::vector<float> mesh = chunk.mesh();
+ 
+  unsigned int chunkVBO, chunkVAO;
+  glGenVertexArrays(1, &chunkVAO);
+  glGenBuffers(1, &chunkVBO);
 
-  std::vector<float> mesh = wb.mesh();
+  glBindVertexArray(chunkVAO);
 
-  unsigned int VBO, VAO;
-  glGenVertexArrays(1, &VAO);
-  glGenBuffers(1, &VBO);
-
-  glBindVertexArray(VAO);
-
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBindBuffer(GL_ARRAY_BUFFER, chunkVBO);
   glBufferData(GL_ARRAY_BUFFER, mesh.size() * sizeof(float), &mesh.front(), GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
 
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3*sizeof(float)));
-  glEnableVertexAttribArray(1);
+  unsigned int lightVBO, lightVAO;
+  glGenVertexArrays(1, &lightVAO);
+  glGenBuffers(1, &lightVBO);
+
+  glBindVertexArray(lightVAO);
+
+  glBindBuffer(GL_ARRAY_BUFFER, lightVBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
+
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+  glEnableVertexAttribArray(0);
 
   while (!glfwWindowShouldClose(window)) {
     deltaTime = (float) glfwGetTime() - lastTime;
@@ -166,24 +180,44 @@ int main(void) {
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f);
 
+    lightingShader.use();
+
+    lightingShader.setMatrix("view", glm::value_ptr(view));
+    lightingShader.setMatrix("projection", glm::value_ptr(projection));
+
+    lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f); // rgbToGl(0), rgbToGl(5), rgbToGl(31));
+    lightingShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+
+    for (int i = 0; i < pos.size(); i++) {
+      glm::mat4 model;
+      model = glm::translate(model, pos[i]);
+      lightingShader.setMatrix("model", glm::value_ptr(model));
+
+      glBindVertexArray(chunkVAO);
+      glDrawArrays(GL_TRIANGLES, 0, mesh.size());
+    }
+
+    def.use();
+
     glm::mat4 model;
-    model = glm::translate(model, glm::vec3(0.0f, -3.0f, 0.0f));
+    model = glm::translate(model, glm::vec3(0, 2, 0));
 
     def.setMatrix("view", glm::value_ptr(view));
     def.setMatrix("projection", glm::value_ptr(projection));
     def.setMatrix("model", glm::value_ptr(model));
 
-    tex.use();
-
-    glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, mesh.size()/5);
+    glBindVertexArray(lightVAO);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
 
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
 
-  glDeleteVertexArrays(1, &VAO);
-  glDeleteBuffers(1, &VBO);
+  glDeleteVertexArrays(1, &chunkVAO);
+  glDeleteBuffers(1, &chunkVBO);
+
+  glDeleteVertexArrays(1, &lightVAO);
+  glDeleteBuffers(1, &lightVBO);
 
   glfwTerminate();
 

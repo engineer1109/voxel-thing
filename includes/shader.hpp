@@ -2,6 +2,7 @@
 #define SHADER_H
 
 #include <glad/glad.h>
+#include <glm/glm.hpp>
 
 #include <string>
 
@@ -14,6 +15,7 @@ class Shader {
     void setInt(const std::string &name, int val);
     void setFloat(const std::string &name, float val);
     void setMatrix(const std::string &name, float *val);
+    void setVec3(const std::string &name, float x, float y, float z);
 
     unsigned int ID;
   private:

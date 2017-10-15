@@ -47,6 +47,10 @@ void Shader::setMatrix(const std::string &name, float *val) {
   glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, val);
 }
 
+void Shader::setVec3(const std::string &name, float x, float y, float z) {
+  glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z);
+}
+
 unsigned int Shader::compile(const char* code, unsigned int type) {
   unsigned int shader = glCreateShader(type);
 

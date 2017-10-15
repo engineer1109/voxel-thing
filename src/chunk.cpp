@@ -1,18 +1,20 @@
-#include "world_builder.hpp"
+#include "chunk.hpp"
 
 #include <iostream>
 
 #include <glm/gtx/rotate_vector.hpp>
 
-WorldBuilder::WorldBuilder() {}
+Chunk::Chunk(glm::vec3 pos) {
+  transform = pos;
+}
 
-std::vector<float> WorldBuilder::mesh() {
+std::vector<float> Chunk::mesh() {
   std::vector<float> mesh;
 
   for (int y = 0; y < CHUNK_HEIGHT; y++) {
     for (int z = 0; z < CHUNK_DEPTH; z++) {
       for (int x = 0; x < CHUNK_WIDTH; x++) {
-        int v = chunkData[y][z][x];
+        int v = data[y][z][x];
         if (v != SOLID) {
           continue;
         }
@@ -33,7 +35,7 @@ std::vector<float> WorldBuilder::mesh() {
   return mesh;
 }
 
-std::vector<float> WorldBuilder::addSide(glm::vec3 pos, BlockSide side) {
+std::vector<float> Chunk::addSide(glm::vec3 pos, BlockSide side) {
   std::vector<glm::vec3> face = {
     glm::vec3(0.5f,  0.5f, -0.5f), // top right
     glm::vec3(0.5f, -0.5f, -0.5f), // bottom right
@@ -108,17 +110,18 @@ std::vector<float> WorldBuilder::addSide(glm::vec3 pos, BlockSide side) {
     verts.push_back(vert.y);
     verts.push_back(vert.z);
 
-    glm::vec2 uv = uvs[i];
-
+    // UVs are disabled
+    // glm::vec2 uv = uvs[i];
+    //
     // uv map
-    verts.push_back(uv.x);
-    verts.push_back(uv.y);
+    // verts.push_back(uv.x);
+    // verts.push_back(uv.y);
   }
 
   return verts;
 }
 
-bool WorldBuilder::emptyToThe(glm::vec3 index, BlockSide side) {
+bool Chunk::emptyToThe(glm::vec3 index, BlockSide side) {
   switch (side) {
     case TOP:
       index.y += 1;
@@ -156,10 +159,10 @@ bool WorldBuilder::emptyToThe(glm::vec3 index, BlockSide side) {
     return true;
   }
 
-  return chunkData[(int)index.y][(int)index.z][(int)index.x] == EMPTY;
+  return data[(int)index.y][(int)index.z][(int)index.x] == EMPTY;
 }
 
-std::vector<BlockSide> WorldBuilder::neededSidesAt(glm::vec3 index) {
+std::vector<BlockSide> Chunk::neededSidesAt(glm::vec3 index) {
   std::vector<BlockSide> possibleSides = {
     TOP,
     BOTTOM,
