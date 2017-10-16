@@ -151,8 +151,11 @@ int main(void) {
   glBindBuffer(GL_ARRAY_BUFFER, chunkVBO);
   glBufferData(GL_ARRAY_BUFFER, mesh.size() * sizeof(float), &mesh.front(), GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
+
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
+  glEnableVertexAttribArray(1);
 
   unsigned int lightVBO, lightVAO;
   glGenVertexArrays(1, &lightVAO);
@@ -166,9 +169,14 @@ int main(void) {
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
 
+  glm::vec3 lightPos(0.0f, 2.0f, 0.0f);
+
   while (!glfwWindowShouldClose(window)) {
     deltaTime = (float) glfwGetTime() - lastTime;
     lastTime = (float) glfwGetTime();
+
+    lightPos.z = sin(lastTime);
+    lightPos.x = cos(lastTime);
 
     processInput(window);
 
@@ -187,6 +195,8 @@ int main(void) {
 
     lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f); // rgbToGl(0), rgbToGl(5), rgbToGl(31));
     lightingShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+    lightingShader.setVec3("lightPos", lightPos);
+    lightingShader.setVec3("viewPos", cameraPos);
 
     for (int i = 0; i < pos.size(); i++) {
       glm::mat4 model;
@@ -200,7 +210,7 @@ int main(void) {
     def.use();
 
     glm::mat4 model;
-    model = glm::translate(model, glm::vec3(0, 2, 0));
+    model = glm::translate(model, lightPos);
 
     def.setMatrix("view", glm::value_ptr(view));
     def.setMatrix("projection", glm::value_ptr(projection));

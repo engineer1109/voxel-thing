@@ -57,37 +57,44 @@ std::vector<float> Chunk::addSide(glm::vec3 pos, BlockSide side) {
   };
 
   glm::vec3 rotateAround;
+  glm::vec3 normal;
   float rotateBy;
 
   switch(side) {
     case FRONT:
       rotateAround = glm::vec3(0.0f, 1.0f, 0.0f);
       rotateBy = 0.0f;
+      normal = glm::vec3(0.0f, 0.0f, -1.0f);
 
       break;
     case BACK:
       rotateAround = glm::vec3(0.0f, 1.0f, 0.0f);
       rotateBy = 180.0f;
+      normal = glm::vec3(0.0f, 0.0f, 1.0f);
 
       break;
     case LEFT:
       rotateAround = glm::vec3(0.0f, 1.0f, 0.0f);
       rotateBy = 270.0f;
+      normal = glm::vec3(-1.0f, 0.0f, 0.0f);
 
       break;
     case RIGHT:
       rotateAround = glm::vec3(0.0f, 1.0f, 0.0f);
       rotateBy = 90.0f;
+      normal = glm::vec3(1.0f, 0.0f, 0.0f);
 
       break;
     case TOP:
       rotateAround = glm::vec3(1.0f, 0.0f, 0.0f);
       rotateBy = 90.0f;
+      normal = glm::vec3(0.0f, 1.0f, 0.0f);
 
       break;
     case BOTTOM:
       rotateAround = glm::vec3(1.0f, 0.0f, 0.0f);
       rotateBy = 270.0f;
+      normal = glm::vec3(0.0f, -1.0f, 0.0f);
 
       break;
     default:
@@ -116,6 +123,11 @@ std::vector<float> Chunk::addSide(glm::vec3 pos, BlockSide side) {
     // uv map
     // verts.push_back(uv.x);
     // verts.push_back(uv.y);
+    
+    // normals
+    verts.push_back(normal.x);
+    verts.push_back(normal.y);
+    verts.push_back(normal.z);
   }
 
   return verts;

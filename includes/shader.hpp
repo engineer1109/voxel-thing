@@ -16,6 +16,7 @@ class Shader {
     void setFloat(const std::string &name, float val);
     void setMatrix(const std::string &name, float *val);
     void setVec3(const std::string &name, float x, float y, float z);
+    void setVec3(const std::string &name, glm::vec3);
 
     unsigned int ID;
   private:
