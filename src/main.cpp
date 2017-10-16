@@ -100,6 +100,7 @@ int main(void) {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_FLOATING, GL_TRUE);
+  glfwWindowHint(GLFW_SAMPLES, 4);
 
   GLFWwindow *window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "game", NULL, NULL);
   if (window == NULL) {
@@ -117,6 +118,7 @@ int main(void) {
     return -1;
   }
 
+  glEnable(GL_MULTISAMPLE);
   glEnable(GL_DEPTH_TEST);
   // glEnable(GL_CULL_FACE);
 
