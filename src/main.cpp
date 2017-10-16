@@ -14,6 +14,7 @@
 
 #include <shader.hpp>
 #include <chunk.hpp>
+#include <mesh.hpp>
 #include <utils.hpp>
 #include <data.hpp>
 #include <texture.hpp>
@@ -139,35 +140,15 @@ int main(void) {
     glm::vec3(0, -1, CHUNK_DEPTH),
   };
 
-  Chunk chunk;
-  std::vector<float> mesh = chunk.mesh();
- 
-  unsigned int chunkVBO, chunkVAO;
-  glGenVertexArrays(1, &chunkVAO);
-  glGenBuffers(1, &chunkVBO);
+  glm::vec3 origin(-CHUNK_WIDTH/2, 0, -CHUNK_DEPTH/2);
 
-  glBindVertexArray(chunkVAO);
+  std::vector<Chunk> chunks;
 
-  glBindBuffer(GL_ARRAY_BUFFER, chunkVBO);
-  glBufferData(GL_ARRAY_BUFFER, mesh.size() * sizeof(float), &mesh.front(), GL_STATIC_DRAW);
+  for (int i = 0; i < pos.size(); i++) {
+    chunks.push_back(Chunk(origin + pos[i]));
+  }
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-  glEnableVertexAttribArray(0);
-
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
-  glEnableVertexAttribArray(1);
-
-  unsigned int lightVBO, lightVAO;
-  glGenVertexArrays(1, &lightVAO);
-  glGenBuffers(1, &lightVBO);
-
-  glBindVertexArray(lightVAO);
-
-  glBindBuffer(GL_ARRAY_BUFFER, lightVBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
-
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-  glEnableVertexAttribArray(0);
+  Mesh lightMesh(cube);
 
   glm::vec3 lightPos(0.0f, 2.0f, 0.0f);
 
@@ -198,13 +179,15 @@ int main(void) {
     lightingShader.setVec3("lightPos", lightPos);
     lightingShader.setVec3("viewPos", cameraPos);
 
-    for (int i = 0; i < pos.size(); i++) {
+    for (int i = 0; i < chunks.size(); i++) {
+      Chunk chunk = chunks[i];
+
       glm::mat4 model;
-      model = glm::translate(model, pos[i]);
+      model = glm::translate(model, chunk.transform);
+
       lightingShader.setMatrix("model", glm::value_ptr(model));
 
-      glBindVertexArray(chunkVAO);
-      glDrawArrays(GL_TRIANGLES, 0, mesh.size());
+      chunk.mesh->draw();
     }
 
     def.use();
@@ -216,18 +199,11 @@ int main(void) {
     def.setMatrix("projection", glm::value_ptr(projection));
     def.setMatrix("model", glm::value_ptr(model));
 
-    glBindVertexArray(lightVAO);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+		lightMesh.draw();
 
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
-
-  glDeleteVertexArrays(1, &chunkVAO);
-  glDeleteBuffers(1, &chunkVBO);
-
-  glDeleteVertexArrays(1, &lightVAO);
-  glDeleteBuffers(1, &lightVBO);
 
   glfwTerminate();
 

@@ -1,24 +1,22 @@
 #ifndef CHUNK_H
 #define CHUNK_H
 
+#include <memory>
 #include <vector>
-#include <glm/glm.hpp>
 
 #include <block.hpp>
 
+#include <chunk_mesh.hpp>
+
 class Chunk {
   public:
-    Chunk(glm::vec3 pos=glm::vec3(0, 0, 0));
+    Chunk(glm::vec3 t = glm::vec3());
 
-    std::vector<float> mesh();
+    std::shared_ptr<ChunkMesh> mesh;
+
+    glm::vec3 transform;
   private:
-    std::vector<float> addSide(glm::vec3 pos, BlockSide side);
-
-    bool emptyToThe(glm::vec3, BlockSide side);
-
-    std::vector<BlockSide> neededSidesAt(glm::vec3 index);
-
-    int data[CHUNK_HEIGHT][CHUNK_DEPTH][CHUNK_WIDTH] = {
+    ChunkData data = {
       {
         { SOLID, SOLID, SOLID },
         { SOLID, SOLID, SOLID },
@@ -35,8 +33,6 @@ class Chunk {
         { EMPTY, EMPTY, EMPTY }
       }
     };
-
-  glm::vec3 transform;
 };
 
 #endif
