@@ -196,6 +196,7 @@ int main(void) {
 
     glm::mat4 model;
     model = glm::translate(model, lightPos);
+    model = glm::scale(model, glm::vec3(0.5, 0.5, 0.5));
 
     def.setMatrix("view", glm::value_ptr(view));
     def.setMatrix("projection", glm::value_ptr(projection));
