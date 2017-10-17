@@ -3,7 +3,7 @@
 #include <iostream>
 #include <glm/gtx/rotate_vector.hpp>
 
-ChunkMesh::ChunkMesh(ChunkData cd) : Mesh(std::vector<float>()) {
+ChunkMesh::ChunkMesh(ChunkData cd) : Mesh(std::vector<float>(), chunkMeshVertexAttribList) {
   chunkData = cd;
 
   generate();
@@ -118,12 +118,11 @@ std::vector<float> ChunkMesh::generateFace(glm::vec3 pos, BlockSide side) {
     verts.push_back(vert.y);
     verts.push_back(vert.z);
 
-    // UVs are disabled
-    // glm::vec2 uv = uvs[i];
-    //
+    glm::vec2 uv = uvs[i];
+
     // uv map
-    // verts.push_back(uv.x);
-    // verts.push_back(uv.y);
+    verts.push_back(uv.x);
+    verts.push_back(uv.y);
     
     // normals
     verts.push_back(normal.x);

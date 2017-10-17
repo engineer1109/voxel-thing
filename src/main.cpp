@@ -134,6 +134,8 @@ int main(void) {
 
   stbi_set_flip_vertically_on_load(true);
 
+  Texture tex("img/dirt.jpg");
+
   std::vector<glm::vec3> pos = {
     glm::vec3(0, -1, 0),
     glm::vec3(-CHUNK_WIDTH, -1, 0),
@@ -176,10 +178,11 @@ int main(void) {
     lightingShader.setMatrix("view", glm::value_ptr(view));
     lightingShader.setMatrix("projection", glm::value_ptr(projection));
 
-    lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f); // rgbToGl(0), rgbToGl(5), rgbToGl(31));
     lightingShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
     lightingShader.setVec3("lightPos", lightPos);
     lightingShader.setVec3("viewPos", cameraPos);
+
+    tex.use();
 
     for (int i = 0; i < chunks.size(); i++) {
       Chunk chunk = chunks[i];

@@ -5,6 +5,12 @@
 #include <block.hpp>
 #include <glm/glm.hpp>
 
+const VertexAttribList chunkMeshVertexAttribList = {
+  VEC3_VERTEX_ATTRIB, // vertex
+  VEC2_VERTEX_ATTRIB, // uv coords
+  VEC3_VERTEX_ATTRIB  // normal
+};
+
 class ChunkMesh : public Mesh {
   public:
     ChunkMesh(ChunkData cd);
