@@ -1,11 +1,18 @@
 #include <mesh.hpp>
 
-Mesh::Mesh(std::vector<float> d) {
+#include <iostream>
+
+#include <utils.hpp>
+
+Mesh::Mesh(std::vector<float> d, VertexAttribList val) {
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
 
   data = d;
-  units = 6;
+
+  vertexAttribList = val;
+  vertexAttribCount = sum(val);
+  vertexAttribDataSize = sizeof(float);
 
   bind();
 }
@@ -27,14 +34,20 @@ void Mesh::bind() {
 
   update();
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, units * sizeof(float), (void*)0);
-  glEnableVertexAttribArray(0);
+  unsigned int total = 0;
+  int attribListSize = vertexAttribCount * vertexAttribDataSize;
 
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, units * sizeof(float), (void*)(3*sizeof(float)));
-  glEnableVertexAttribArray(1);
+  for (int i = 0; i < vertexAttribList.size(); i++) {
+    int attribSize = vertexAttribList[i];
+
+    glVertexAttribPointer(i, attribSize, GL_FLOAT, GL_FALSE, attribListSize, (void*)total);
+    glEnableVertexAttribArray(i);
+
+    total += attribSize * vertexAttribDataSize;
+  }
 }
 
 void Mesh::update() {
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data.front(), GL_DYNAMIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, data.size() * vertexAttribDataSize, &data.front(), GL_DYNAMIC_DRAW);
 }
