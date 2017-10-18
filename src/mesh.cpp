@@ -5,16 +5,11 @@
 #include <utils.hpp>
 
 Mesh::Mesh(std::vector<float> d, VertexAttribList val) {
-  glGenVertexArrays(1, &VAO);
-  glGenBuffers(1, &VBO);
-
   data = d;
 
   vertexAttribList = val;
   vertexAttribCount = sum(val);
   vertexAttribDataSize = sizeof(float);
-
-  bind();
 }
 
 Mesh::~Mesh() {
@@ -30,6 +25,9 @@ void Mesh::draw() {
 }
 
 void Mesh::bind() {
+  glGenVertexArrays(1, &VAO);
+  glGenBuffers(1, &VBO);
+
   glBindVertexArray(VAO);
 
   update();

@@ -21,25 +21,22 @@ void ChunkMesh::generate() {
           continue;
         }
 
+
         glm::vec3 pos((float) x, (float) y, (float) z);
 
         std::vector<BlockSide> sides = neededSidesAt(pos);
 
-        float lightStrength = lightStrengthAt(pos);
-
         for (int i = 0; i < sides.size(); i++) {
-          std::vector<float>face = generateFace(pos, sides[i], lightStrength);
+          std::vector<float>face = generateFace(pos, sides[i]);
 
           data.insert(data.end(), face.begin(), face.end());
         }
       }
     }
   }
-
-  update();
 }
 
-std::vector<float> ChunkMesh::generateFace(glm::vec3 pos, BlockSide side, float lightStrength) {
+std::vector<float> ChunkMesh::generateFace(glm::vec3 pos, BlockSide side) {
   std::vector<glm::vec3> face = {
     glm::vec3(0.5f,  0.5f, -0.5f), // top right
     glm::vec3(0.5f, -0.5f, -0.5f), // bottom right
@@ -132,6 +129,8 @@ std::vector<float> ChunkMesh::generateFace(glm::vec3 pos, BlockSide side, float 
     verts.push_back(normal.y);
     verts.push_back(normal.z);
 
+    float lightStrength = lightStrengthAt(pos, side);
+
     // light strength
     verts.push_back(lightStrength);
   }
@@ -205,6 +204,43 @@ bool ChunkMesh::emptyToThe(glm::vec3 index, BlockSide side) {
   return chunkData[(int)index.y][(int)index.z][(int)index.x] == EMPTY;
 }
 
-float ChunkMesh::lightStrengthAt(glm::vec3 index) {
+float ChunkMesh::lightStrengthAt(glm::vec3 index, BlockSide side) {
+  switch (side) {
+    case TOP:
+      index.y += 1;
+
+      break;
+    case BOTTOM:
+      index.y -= 1;
+
+      break;
+    case LEFT:
+      index.x += 1;
+
+      break;
+    case RIGHT:
+      index.x -= 1;
+
+      break;
+    case FRONT:
+      index.z -= 1;
+
+      break;
+    case BACK:
+      index.z += 1;
+
+      break;
+    default:
+      throw "fuck this";
+  }
+
+  if (index.x < 0 || index.y < 0 || index.z < 0) {
+    return 0.0f;
+  }
+
+  if (index.x > CHUNK_WIDTH - 1 || index.y > CHUNK_HEIGHT - 1 || index.z > CHUNK_DEPTH - 1) {
+    return 0.0f;
+  }
+
   return (float) lightData[(int) index.y][(int) index.z][(int) index.x];
 }

@@ -140,6 +140,8 @@ int main(void) {
   World world;
 
   Mesh lightMesh(cube);
+  lightMesh.bind();
+
 
   glm::vec3 lightPos(0.0f, 2.0f, 0.0f);
 
@@ -174,14 +176,14 @@ int main(void) {
 
     for (int y = 0; y < WORLD_DEPTH; y++) {
       for (int x = 0; x < WORLD_WIDTH; x++) {
-        Chunk chunk = world.chunks[y][x];
+        std::shared_ptr<Chunk> chunk = world.chunks[y][x];
 
         glm::mat4 model;
-        model = glm::translate(model, chunk.transform);
+        model = glm::translate(model, chunk->transform);
 
         lightingShader.setMatrix("model", glm::value_ptr(model));
 
-        chunk.mesh->draw();
+        chunk->mesh->draw();
       }
     }
 

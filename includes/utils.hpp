@@ -9,4 +9,12 @@ float rgbToGl(float v);
 
 int sum(std::vector<int>);
 
+int randRange(int, int);
+
+struct Index {
+  int x;
+  int y;
+  int z;
+};
+
 #endif

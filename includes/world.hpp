@@ -2,6 +2,7 @@
 #define WORLD_H
 
 #include <vector>
+#include <memory>
 
 #include <block.hpp>
 #include <chunk.hpp>
@@ -13,7 +14,7 @@ class World {
   public:
     World();
 
-    std::vector<std::vector<Chunk>> chunks;
+    std::vector<std::vector<std::shared_ptr<Chunk>>> chunks;
 };
 
 #endif

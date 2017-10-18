@@ -20,6 +20,7 @@ class Mesh {
 		Mesh(std::vector<float> d, VertexAttribList val = defaultVertexAttribList);
 		~Mesh();
 
+    void bind();
     void draw();
   protected:
     void update();
@@ -32,8 +33,6 @@ class Mesh {
     VertexAttribList vertexAttribList;
     int vertexAttribCount;
     unsigned int vertexAttribDataSize;
-
-    void bind();
 };
 
 #endif

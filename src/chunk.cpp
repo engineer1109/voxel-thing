@@ -1,16 +1,28 @@
 #include "chunk.hpp"
 
+#include <world.hpp>
+
 #include <iostream>
 
-Chunk::Chunk(glm::vec3 t) {
-  generateLights();
-
-  mesh = std::make_shared<ChunkMesh>(data, lightData);
-
+Chunk::Chunk(World *w, Index i, glm::vec3 t) {
+  world = w;
   transform = t;
+  index = i;
+
+  initLights();
 }
 
-void Chunk::generateLights() {
+void Chunk::ready() {
+  generateLights();
+}
+
+void Chunk::push() {
+  mesh = std::make_shared<ChunkMesh>(data, lightData);
+
+  mesh->bind();
+}
+
+void Chunk::initLights() {
   lightData.clear();
 
   for (int y = 0; y < CHUNK_HEIGHT; y++) {
@@ -28,8 +40,10 @@ void Chunk::generateLights() {
 
     lightData.push_back(col);
   }
+}
 
-  floodLightAt(2, 2, 2, 4);
+void Chunk::generateLights() {
+  floodLightAt(randRange(0, 9), 2, randRange(0, 9), randRange(2, 9));
 }
 
 void Chunk::floodLightAt(int xIndex, int yIndex, int zIndex, int r) {
@@ -40,22 +54,62 @@ void Chunk::floodLightAt(int xIndex, int yIndex, int zIndex, int r) {
   for (int y = yIndex - r; y < yIndex + r; y++) {
     for (int z = zIndex - r; z < zIndex + r; z++) {
       for (int x = xIndex - r; x < xIndex + r; x++) {
-        if (y < 0 || z < 0 || x < 0) {
+        Index chunkIndex = index;
+        Index blockIndex = {x, y, z};
+
+        if (x < 0) {
+          chunkIndex.x += 1;
+          blockIndex.x = x + CHUNK_WIDTH;
+        }
+
+        if (x >= CHUNK_WIDTH) {
+          chunkIndex.x -= 1;
+          blockIndex.x = x - CHUNK_WIDTH;
+        }
+
+        if (z < 0) {
+          chunkIndex.z += 1;
+          blockIndex.z = z + CHUNK_DEPTH;
+        }
+
+        if (z >= CHUNK_DEPTH) {
+          chunkIndex.z -= 1;
+          blockIndex.z = z - CHUNK_DEPTH;
+        }
+
+        if (y < 0 || y >= CHUNK_HEIGHT) {
           continue;
         }
 
-        if (y >= CHUNK_HEIGHT || z >= CHUNK_DEPTH || x >= CHUNK_WIDTH) {
+        if (chunkIndex.x < 0 || chunkIndex.z < 0) {
+          continue;
+        }
+
+        if (chunkIndex.x >= WORLD_WIDTH || chunkIndex.z >= WORLD_DEPTH) {
           continue;
         }
 
         glm::vec3 pos(x, y, z);
-
         glm::vec3 temp = origin - pos;
-
         float distSqr = glm::dot(temp, temp);
-        int strength = (int)((distSqr/maxDistSqr)*100.0f);
 
-        lightData[y][z][x] = 100 - strength;
+        if (distSqr > maxDistSqr) {
+          continue;
+        }
+
+        float strength = pow(distSqr/maxDistSqr, 2);
+        int v = 100 - (int)(strength*100.0f);
+
+        std::shared_ptr<Chunk> chunk = world->chunks[chunkIndex.z][chunkIndex.x];
+        if (chunk->data[blockIndex.y][blockIndex.z][blockIndex.x] == SOLID) {
+          continue;
+        }
+
+        if (chunk->lightData[blockIndex.y][blockIndex.z][blockIndex.x] > v) {
+          continue;
+        }
+
+        chunk->lightData[blockIndex.y][blockIndex.z][blockIndex.x] = v;
       }
     }
   }
