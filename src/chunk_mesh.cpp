@@ -3,8 +3,9 @@
 #include <iostream>
 #include <glm/gtx/rotate_vector.hpp>
 
-ChunkMesh::ChunkMesh(ChunkData cd) : Mesh(std::vector<float>(), chunkMeshVertexAttribList) {
+ChunkMesh::ChunkMesh(ChunkData cd, ChunkData ld) : Mesh(std::vector<float>(), chunkMeshVertexAttribList) {
   chunkData = cd;
+  lightData = ld;
 
   generate();
 }
@@ -24,8 +25,10 @@ void ChunkMesh::generate() {
 
         std::vector<BlockSide> sides = neededSidesAt(pos);
 
+        float lightStrength = lightStrengthAt(pos);
+
         for (int i = 0; i < sides.size(); i++) {
-          std::vector<float>face = generateFace(pos, sides[i]);
+          std::vector<float>face = generateFace(pos, sides[i], lightStrength);
 
           data.insert(data.end(), face.begin(), face.end());
         }
@@ -36,7 +39,7 @@ void ChunkMesh::generate() {
   update();
 }
 
-std::vector<float> ChunkMesh::generateFace(glm::vec3 pos, BlockSide side) {
+std::vector<float> ChunkMesh::generateFace(glm::vec3 pos, BlockSide side, float lightStrength) {
   std::vector<glm::vec3> face = {
     glm::vec3(0.5f,  0.5f, -0.5f), // top right
     glm::vec3(0.5f, -0.5f, -0.5f), // bottom right
@@ -65,13 +68,13 @@ std::vector<float> ChunkMesh::generateFace(glm::vec3 pos, BlockSide side) {
     case FRONT:
       rotateAround = glm::vec3(0.0f, 1.0f, 0.0f);
       rotateBy = 0.0f;
-      normal = glm::vec3(0.0f, 0.0f, -1.0f);
+      normal = glm::vec3(0.0f, 0.0f, 1.0f);
 
       break;
     case BACK:
       rotateAround = glm::vec3(0.0f, 1.0f, 0.0f);
       rotateBy = 180.0f;
-      normal = glm::vec3(0.0f, 0.0f, 1.0f);
+      normal = glm::vec3(0.0f, 0.0f, -1.0f);
 
       break;
     case LEFT:
@@ -128,6 +131,9 @@ std::vector<float> ChunkMesh::generateFace(glm::vec3 pos, BlockSide side) {
     verts.push_back(normal.x);
     verts.push_back(normal.y);
     verts.push_back(normal.z);
+
+    // light strength
+    verts.push_back(lightStrength);
   }
 
   return verts;
@@ -197,4 +203,8 @@ bool ChunkMesh::emptyToThe(glm::vec3 index, BlockSide side) {
   }
 
   return chunkData[(int)index.y][(int)index.z][(int)index.x] == EMPTY;
+}
+
+float ChunkMesh::lightStrengthAt(glm::vec3 index) {
+  return (float) lightData[(int) index.y][(int) index.z][(int) index.x];
 }

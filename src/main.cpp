@@ -18,9 +18,10 @@
 #include <utils.hpp>
 #include <data.hpp>
 #include <texture.hpp>
+#include <world.hpp>
 
-const float SCREEN_WIDTH=800.0f;
-const float SCREEN_HEIGHT=600.0f;
+const float SCREEN_WIDTH=1600.0f;
+const float SCREEN_HEIGHT=900.0f;
 
 float lastTime;
 float deltaTime;
@@ -136,21 +137,7 @@ int main(void) {
 
   Texture tex("img/dirt.jpg");
 
-  std::vector<glm::vec3> pos = {
-    glm::vec3(0, -1, 0),
-    glm::vec3(-CHUNK_WIDTH, -1, 0),
-    glm::vec3(CHUNK_WIDTH, -1, 0),
-    glm::vec3(0, -1, -CHUNK_DEPTH),
-    glm::vec3(0, -1, CHUNK_DEPTH),
-  };
-
-  glm::vec3 origin(-CHUNK_WIDTH/2, 0, -CHUNK_DEPTH/2);
-
-  std::vector<Chunk> chunks;
-
-  for (int i = 0; i < pos.size(); i++) {
-    chunks.push_back(Chunk(origin + pos[i]));
-  }
+  World world;
 
   Mesh lightMesh(cube);
 
@@ -160,12 +147,13 @@ int main(void) {
     deltaTime = (float) glfwGetTime() - lastTime;
     lastTime = (float) glfwGetTime();
 
-    lightPos.z = sin(lastTime);
-    lightPos.x = cos(lastTime);
+    lightPos.z = sin(lastTime/4)*2;
+    lightPos.x = cos(lastTime/4)*2;
 
     processInput(window);
 
-    glClearColor(rgbToGl(49), rgbToGl(198), rgbToGl(247), 1.0f);
+    // glClearColor(rgbToGl(49), rgbToGl(198), rgbToGl(247), 1.0f);
+    glClearColor(0, 0, 0, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
@@ -184,15 +172,17 @@ int main(void) {
 
     tex.use();
 
-    for (int i = 0; i < chunks.size(); i++) {
-      Chunk chunk = chunks[i];
+    for (int y = 0; y < WORLD_DEPTH; y++) {
+      for (int x = 0; x < WORLD_WIDTH; x++) {
+        Chunk chunk = world.chunks[y][x];
 
-      glm::mat4 model;
-      model = glm::translate(model, chunk.transform);
+        glm::mat4 model;
+        model = glm::translate(model, chunk.transform);
 
-      lightingShader.setMatrix("model", glm::value_ptr(model));
+        lightingShader.setMatrix("model", glm::value_ptr(model));
 
-      chunk.mesh->draw();
+        chunk.mesh->draw();
+      }
     }
 
     def.use();

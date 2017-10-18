@@ -8,20 +8,24 @@
 const VertexAttribList chunkMeshVertexAttribList = {
   VEC3_VERTEX_ATTRIB, // vertex
   VEC2_VERTEX_ATTRIB, // uv coords
-  VEC3_VERTEX_ATTRIB  // normal
+  VEC3_VERTEX_ATTRIB, // normal
+  F_VERTEX_ATTRIB     // light strength
 };
 
 class ChunkMesh : public Mesh {
   public:
-    ChunkMesh(ChunkData cd);
+    ChunkMesh(ChunkData cd, ChunkData ld);
   private:
     void generate();
 
-    std::vector<float> generateFace(glm::vec3, BlockSide);
+    std::vector<float> generateFace(glm::vec3, BlockSide, float);
     std::vector<BlockSide> neededSidesAt(glm::vec3);
     bool emptyToThe(glm::vec3, BlockSide);
 
+    float lightStrengthAt(glm::vec3);
+
     ChunkData chunkData;
+    ChunkData lightData;
 };
 
 #endif

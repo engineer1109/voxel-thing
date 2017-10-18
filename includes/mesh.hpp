@@ -8,6 +8,7 @@ typedef std::vector<int> VertexAttribList;
 
 const int VEC3_VERTEX_ATTRIB = 3;
 const int VEC2_VERTEX_ATTRIB = 2;
+const int F_VERTEX_ATTRIB = 1;
 
 const VertexAttribList defaultVertexAttribList = {
   VEC3_VERTEX_ATTRIB, // vertex
