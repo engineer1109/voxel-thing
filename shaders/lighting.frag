@@ -11,7 +11,6 @@ uniform sampler2D texture1;
 in vec3 Normal;
 in vec2 TexCoord;
 in vec3 FragPos;
-in float LightStrength;
 
 void main() {
     float ambientStrength = 0.1;
@@ -33,5 +32,5 @@ void main() {
 
     vec3 color = texture(texture1, TexCoord).xyz;
 
-	FragColor = vec4(color * (LightStrength + diffuse + specular) , 1.0); //vec4(color * (ambient + diffuse + specular), 1.0);
+	FragColor = vec4(color * (ambient + diffuse + specular) , 1.0);
 }

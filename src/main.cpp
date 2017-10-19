@@ -131,7 +131,7 @@ int main(void) {
   glfwSetCursorPosCallback(window, mouseCallback);
 
   Shader def("shaders/default.vert", "shaders/default.frag");
-  Shader lightingShader("shaders/lighting.vert", "shaders/lighting.frag");
+  Shader blockLightingShader("shaders/lighting.vert", "shaders/block_lighting.frag");
 
   stbi_set_flip_vertically_on_load(true);
 
@@ -141,7 +141,6 @@ int main(void) {
 
   Mesh lightMesh(cube);
   lightMesh.bind();
-
 
   glm::vec3 lightPos(0.0f, 2.0f, 0.0f);
 
@@ -163,14 +162,10 @@ int main(void) {
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f);
 
-    lightingShader.use();
+    blockLightingShader.use();
 
-    lightingShader.setMatrix("view", glm::value_ptr(view));
-    lightingShader.setMatrix("projection", glm::value_ptr(projection));
-
-    lightingShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
-    lightingShader.setVec3("lightPos", lightPos);
-    lightingShader.setVec3("viewPos", cameraPos);
+    blockLightingShader.setMatrix("view", glm::value_ptr(view));
+    blockLightingShader.setMatrix("projection", glm::value_ptr(projection));
 
     tex.use();
 
@@ -181,7 +176,7 @@ int main(void) {
         glm::mat4 model;
         model = glm::translate(model, chunk->transform);
 
-        lightingShader.setMatrix("model", glm::value_ptr(model));
+        blockLightingShader.setMatrix("model", glm::value_ptr(model));
 
         chunk->mesh->draw();
       }
