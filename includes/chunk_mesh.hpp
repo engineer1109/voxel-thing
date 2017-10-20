@@ -15,9 +15,9 @@ const VertexAttribList chunkMeshVertexAttribList = {
 class ChunkMesh : public Mesh {
   public:
     ChunkMesh(ChunkData cd, ChunkData ld);
-  private:
-    void generate();
 
+    void generate(ChunkData cd, ChunkData ld);
+  private:
     std::vector<float> generateFace(glm::vec3, BlockSide);
     std::vector<BlockSide> neededSidesAt(glm::vec3);
     bool emptyToThe(glm::vec3, BlockSide);

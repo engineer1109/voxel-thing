@@ -19,6 +19,7 @@
 #include <data.hpp>
 #include <texture.hpp>
 #include <world.hpp>
+#include <block.hpp>
 
 const float SCREEN_WIDTH=1600.0f;
 const float SCREEN_HEIGHT=900.0f;
@@ -27,7 +28,7 @@ float lastTime;
 float deltaTime;
 
 float cameraSpeed = 5.0f;
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, -3.0f);
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -95,6 +96,20 @@ void mouseCallback(GLFWwindow *window, double x, double y) {
   lastMouseY = y;
 }
 
+bool mouseButton = false;
+bool lastMouseButton = false;
+bool justClicked = false;
+
+void mouseButtonCallback(GLFWwindow *window, int button, int action, int mode) {
+  lastMouseButton = mouseButton;
+
+  if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+    mouseButton = true;
+  } else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
+    mouseButton = false;
+  }
+}
+
 int main(void) {
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -129,45 +144,45 @@ int main(void) {
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
   glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
   glfwSetCursorPosCallback(window, mouseCallback);
+  glfwSetMouseButtonCallback(window, mouseButtonCallback);
 
-  Shader def("shaders/default.vert", "shaders/default.frag");
   Shader blockLightingShader("shaders/lighting.vert", "shaders/block_lighting.frag");
+  Shader hudShader("shaders/hud.vert", "shaders/hud.frag");
+  Shader posGizmoShader("shaders/pos_gizmo.vert", "shaders/pos_gizmo.frag");
 
   stbi_set_flip_vertically_on_load(true);
 
-  Texture tex("img/dirt.jpg");
+  Texture dirtTexture("img/dirt.jpg");
+  Texture crosshairTexture("img/crosshair.jpg");
+
+  Mesh crosshairMesh(quad, { VEC3_VERTEX_ATTRIB, VEC3_VERTEX_ATTRIB, VEC2_VERTEX_ATTRIB });
+  crosshairMesh.bind();
+
+  Mesh posGizmoMesh(xyzLines, { VEC3_VERTEX_ATTRIB, VEC3_VERTEX_ATTRIB }, GL_LINES);
+  posGizmoMesh.bind();
 
   World world;
-
-  Mesh lightMesh(cube);
-  lightMesh.bind();
-
-  glm::vec3 lightPos(0.0f, 2.0f, 0.0f);
 
   while (!glfwWindowShouldClose(window)) {
     deltaTime = (float) glfwGetTime() - lastTime;
     lastTime = (float) glfwGetTime();
 
-    lightPos.z = sin(lastTime/4)*2;
-    lightPos.x = cos(lastTime/4)*2;
-
     processInput(window);
 
-    // glClearColor(rgbToGl(49), rgbToGl(198), rgbToGl(247), 1.0f);
     glClearColor(0, 0, 0, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
     glm::mat4 projection;
-    projection = glm::perspective(glm::radians(45.0f), SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f);
+    projection = glm::perspective(glm::radians(70.0f), SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f);
 
     blockLightingShader.use();
 
     blockLightingShader.setMatrix("view", glm::value_ptr(view));
     blockLightingShader.setMatrix("projection", glm::value_ptr(projection));
 
-    tex.use();
+    dirtTexture.use();
 
     for (int y = 0; y < WORLD_DEPTH; y++) {
       for (int x = 0; x < WORLD_WIDTH; x++) {
@@ -182,17 +197,33 @@ int main(void) {
       }
     }
 
-    def.use();
+    posGizmoShader.use();
 
     glm::mat4 model;
-    model = glm::translate(model, lightPos);
-    model = glm::scale(model, glm::vec3(0.5, 0.5, 0.5));
+    model = glm::translate(model, glm::vec3(1, 1, 1));
 
-    def.setMatrix("view", glm::value_ptr(view));
-    def.setMatrix("projection", glm::value_ptr(projection));
-    def.setMatrix("model", glm::value_ptr(model));
+    posGizmoShader.setMatrix("view", glm::value_ptr(view));
+    posGizmoShader.setMatrix("projection", glm::value_ptr(projection));
+    posGizmoShader.setMatrix("model", glm::value_ptr(model));
 
-		lightMesh.draw();
+    posGizmoMesh.draw();
+
+    hudShader.use();
+
+    glm::mat4 model;
+    model = glm::scale(model, glm::vec3(0.02, 0.02, 0.02));
+
+    hudShader.setMatrix("model", glm::value_ptr(model));
+    crosshairTexture.use();
+    crosshairMesh.draw();
+
+    RayHit ray = world.ray(cameraPos, cameraFront);
+
+    if (ray.didHit && (!lastMouseButton && mouseButton)) {
+      world.chunks[ray.chunk.z][ray.chunk.x]->data[ray.block.y + 1][ray.block.z][ray.block.x] = SOLID;
+
+      world.reloadChunks();
+    }
 
     glfwSwapBuffers(window);
     glfwPollEvents();

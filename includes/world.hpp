@@ -6,15 +6,20 @@
 
 #include <block.hpp>
 #include <chunk.hpp>
+#include <utils.hpp>
 
-constexpr int WORLD_WIDTH = 3;
-constexpr int WORLD_DEPTH = 3;
+constexpr int WORLD_WIDTH = 1;
+constexpr int WORLD_DEPTH = 1;
 
 class World {
   public:
     World();
 
     std::vector<std::vector<std::shared_ptr<Chunk>>> chunks;
+
+    void reloadChunks();
+
+    RayHit ray(glm::vec3 origin, glm::vec3 direction);
 };
 
 #endif

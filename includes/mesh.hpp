@@ -17,13 +17,13 @@ const VertexAttribList defaultVertexAttribList = {
 
 class Mesh {
   public:
-		Mesh(std::vector<float> d, VertexAttribList val = defaultVertexAttribList);
+		Mesh(std::vector<float> d, VertexAttribList val = defaultVertexAttribList, unsigned int dm = GL_TRIANGLES);
 		~Mesh();
 
     void bind();
     void draw();
-  protected:
     void update();
+  protected:
 
     std::vector<float> data;
   private:
@@ -33,6 +33,8 @@ class Mesh {
     VertexAttribList vertexAttribList;
     int vertexAttribCount;
     unsigned int vertexAttribDataSize;
+
+    unsigned int drawMode;
 };
 
 #endif

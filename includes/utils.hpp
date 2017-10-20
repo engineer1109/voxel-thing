@@ -17,4 +17,11 @@ struct Index {
   int z;
 };
 
+struct RayHit {
+  bool didHit;
+
+  Index chunk;
+  Index block;
+};
+
 #endif

@@ -21,11 +21,7 @@ class Chunk {
 
     void ready();
     void push();
-  private:
-    Index index;
-    World *world;
-
-    ChunkData lightData = {};
+    void refresh();
 
     ChunkData data = {
       {
@@ -149,6 +145,13 @@ class Chunk {
         { EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY },
       }
     };
+
+
+  private:
+    Index index;
+    World *world;
+
+    ChunkData lightData = {};
 
     void initLights();
     void generateLights();

@@ -4,8 +4,9 @@
 
 #include <utils.hpp>
 
-Mesh::Mesh(std::vector<float> d, VertexAttribList val) {
+Mesh::Mesh(std::vector<float> d, VertexAttribList val, unsigned int dm) {
   data = d;
+  drawMode = dm;
 
   vertexAttribList = val;
   vertexAttribCount = sum(val);
@@ -21,7 +22,7 @@ Mesh::~Mesh() {
 
 void Mesh::draw() {
   glBindVertexArray(VAO);
-  glDrawArrays(GL_TRIANGLES, 0, data.size()/6);
+  glDrawArrays(drawMode, 0, data.size()/vertexAttribList.size());
 }
 
 void Mesh::bind() {

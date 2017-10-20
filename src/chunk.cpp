@@ -16,6 +16,11 @@ void Chunk::ready() {
   generateLights();
 }
 
+void Chunk::refresh() {
+  mesh->generate(data, lightData);
+  mesh->update();
+}
+
 void Chunk::push() {
   mesh = std::make_shared<ChunkMesh>(data, lightData);
 
@@ -43,7 +48,9 @@ void Chunk::initLights() {
 }
 
 void Chunk::generateLights() {
-  floodLightAt(randRange(0, 9), 2, randRange(0, 9), randRange(2, 9));
+  //floodLightAt(randRange(0, 9), 2, randRange(0, 9), randRange(2, 9));
+  floodLightAt(2, 2, 2, 4);
+  floodLightAt(6, 2, 6, 4);
 }
 
 void Chunk::floodLightAt(int xIndex, int yIndex, int zIndex, int r) {

@@ -4,13 +4,13 @@
 #include <glm/gtx/rotate_vector.hpp>
 
 ChunkMesh::ChunkMesh(ChunkData cd, ChunkData ld) : Mesh(std::vector<float>(), chunkMeshVertexAttribList) {
+  generate(cd, ld);
+}
+
+void ChunkMesh::generate(ChunkData cd, ChunkData ld) {
   chunkData = cd;
   lightData = ld;
 
-  generate();
-}
-
-void ChunkMesh::generate() {
   data.clear();
 
   for (int y = 0; y < CHUNK_HEIGHT; y++) {
