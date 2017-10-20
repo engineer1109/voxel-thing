@@ -210,7 +210,7 @@ int main(void) {
 
     hudShader.use();
 
-    glm::mat4 model;
+    model = glm::mat4();
     model = glm::scale(model, glm::vec3(0.02, 0.02, 0.02));
 
     hudShader.setMatrix("model", glm::value_ptr(model));
@@ -223,6 +223,8 @@ int main(void) {
       world.chunks[ray.chunk.z][ray.chunk.x]->data[ray.block.y + 1][ray.block.z][ray.block.x] = SOLID;
 
       world.reloadChunks();
+
+      mouseButton = false;
     }
 
     glfwSwapBuffers(window);

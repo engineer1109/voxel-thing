@@ -19,5 +19,5 @@ void main() {
     FragPos = vec3(model * vec4(aPos, 1.0));
     Normal = mat3(transpose(inverse(model))) * aNormal;  
     TexCoord = aTexCoord;
-    LightStrength = (aLight/100);
+    LightStrength = max((aLight/100), 0.05);
 }
