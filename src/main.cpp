@@ -27,6 +27,8 @@
 const float SCREEN_WIDTH=1600.0f;
 const float SCREEN_HEIGHT=900.0f;
 
+int frames = 0;
+
 float lastTime;
 float deltaTime;
 
@@ -254,7 +256,15 @@ int main(void) {
         ImGui::Text("Voxel Bomber 0.0.1 [debug]");
         ImGui::Separator();
 
-        ImGui::Columns(3, "mixed");
+        ImGui::Columns(4, "mixed");
+
+        ImGui::Text("Engine");
+        ImGui::Indent(10.0f);
+        ImGui::Text("fps: %f", frames / lastTime);
+        ImGui::Text("time: %f", lastTime);
+        ImGui::Text("delta: %f", deltaTime);
+        ImGui::Unindent();
+        ImGui::NextColumn();
 
         ImGui::Text("Camera");
         ImGui::Indent(10.0f);
@@ -287,6 +297,8 @@ int main(void) {
     ImGui::Render();
 
     glfwSwapBuffers(window);
+
+    frames++;
   }
 
   ImGui_ImplGlfwGL3_Shutdown();
