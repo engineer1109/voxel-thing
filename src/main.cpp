@@ -275,7 +275,8 @@ int main(void) {
 
         ImGui::Text("World");
         ImGui::Indent(10.0f);
-        ImGui::Text("chunks: %d (%d,%d)", WORLD_WIDTH*WORLD_DEPTH, WORLD_WIDTH, WORLD_DEPTH);
+        ImGui::Text("size: %d (%d,%d)", WORLD_WIDTH*WORLD_DEPTH, WORLD_WIDTH, WORLD_DEPTH);
+        ImGui::Text("chunk size: (%d,%d,%d)", CHUNK_WIDTH, CHUNK_DEPTH, CHUNK_HEIGHT);
         ImGui::Unindent();
         ImGui::NextColumn();
 
