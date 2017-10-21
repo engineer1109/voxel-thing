@@ -4,6 +4,7 @@ project(game)
 option(GLFW_BUILD_DOCS OFF)
 option(GLFW_BUILD_EXAMPLES OFF)
 option(GLFW_BUILD_TESTS OFF)
+
 add_subdirectory(./vendor/glfw)
 add_subdirectory(./vendor/glm)
 
@@ -21,7 +22,9 @@ include_directories(
     ./vendor/glad/include/
     ./vendor/glfw/include/
     ./vendor/glm/glm/
-    ./vendor/stb/include/)
+    ./vendor/stb/include/
+    ./vendor/imgui/
+    ./vendor/imgui_impl_glfw_gl3/)
 
 file(GLOB VENDORS_SOURCES vendor/glad/src/glad.c vendor/stb/src/stb_image.cpp)
 file(GLOB PROJECT_HEADERS ./includes/*.hpp)
@@ -32,15 +35,20 @@ file(GLOB PROJECT_CONFIGS CMakeLists.txt
     .gitignore
     .gitmodules)
 
-source_group("headers" FILES ${PROJECT_HEADERS})
-source_group("sources" FILES ${PROJECT_SOURCES})
+# imgui doesn't like being treated like a normal library. so we're doing this to not
+# 'break any rules'.
+file(GLOB VENDOR_IMGUI_SOURCES ./vendor/imgui/*.cpp ./vendor/imgui_impl_glfw_gl3/*.cpp)
+file(GLOB VENDOR_IMGUI_HEADERS ./vendor/imgui/*.h ./vendor/imgui_impl_glfw_gl3/*.h)
+
+source_group("headers" FILES ${PROJECT_HEADERS} ${VENDOR_IMGUI_HEADERS})
+source_group("sources" FILES ${PROJECT_SOURCES} ${VENDOR_IMGUI_SOURCES})
 source_group("vendors" FILES ${VENDORS_SOURCES})
 
 add_definitions(-DGLFW_INCLUDE_NONE
     -DPROJECT_SOURCE_DIR=\"${PROJECT_SOURCE_DIR}\")
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS}
     ${PROJECT_SHADERS} ${PROJECT_CONFIGS}
-    ${VENDORS_SOURCES})
+    ${VENDORS_SOURCES} ${VENDOR_IMGUI_HEADERS} ${VENDOR_IMGUI_SOURCES})
 target_link_libraries(${PROJECT_NAME} glfw glm
     ${GLFW_LIBRARIES} ${GLAD_LIBRARIES})
 set_target_properties(${PROJECT_NAME} PROPERTIES

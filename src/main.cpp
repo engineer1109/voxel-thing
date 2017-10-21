@@ -2,6 +2,9 @@
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
 
+#include <imgui.h>
+#include <imgui_impl_glfw_gl3.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -40,6 +43,8 @@ float yaw = 0;
 
 bool firstMouse = true;
 
+bool debugMode = false;
+
 void framebufferSizeCallback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
 }
@@ -63,6 +68,14 @@ void processInput(GLFWwindow *window) {
 
   if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
     cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltaTime;
+  }
+
+  if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS) {
+    debugMode = true;
+  }
+
+  if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_RELEASE) {
+    debugMode = false;
   }
 }
 
@@ -141,7 +154,7 @@ int main(void) {
   // glCullFace(GL_BACK);  
   glViewport(0, 0, SCREEN_WIDTH, SCREEN_WIDTH);
 
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
+  // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
   glfwSetCursorPosCallback(window, mouseCallback);
   glfwSetMouseButtonCallback(window, mouseButtonCallback);
@@ -163,10 +176,15 @@ int main(void) {
 
   World world;
 
+  // Setup ImGui binding
+	ImGui_ImplGlfwGL3_Init(window, false);
+  ImGui::SetMouseCursor(ImGuiMouseCursor_None);
+
   while (!glfwWindowShouldClose(window)) {
     deltaTime = (float) glfwGetTime() - lastTime;
     lastTime = (float) glfwGetTime();
 
+    glfwPollEvents();
     processInput(window);
 
     glClearColor(0, 0, 0, 1.0f);
@@ -211,7 +229,7 @@ int main(void) {
     hudShader.use();
 
     model = glm::mat4();
-    model = glm::scale(model, glm::vec3(0.02, 0.02, 0.02));
+    model = glm::scale(model, glm::vec3(0.005, 0.005, 0.005));
 
     hudShader.setMatrix("model", glm::value_ptr(model));
     crosshairTexture.use();
@@ -227,10 +245,51 @@ int main(void) {
       mouseButton = false;
     }
 
+    ImGui_ImplGlfwGL3_NewFrame();
+
+    if (debugMode) {
+      ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.0f, 1.0f, 1.0f, 0.3f)); // Transparent background
+      if (ImGui::Begin("Example: Fixed Overlay", &debugMode, ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoResize|ImGuiWindowFlags_AlwaysAutoResize|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoSavedSettings))
+      {
+        ImGui::Text("Voxel Bomber 0.0.1 [debug]");
+        ImGui::Separator();
+
+        ImGui::Columns(3, "mixed");
+
+        ImGui::Text("Camera");
+        ImGui::Indent(10.0f);
+        ImGui::Text("position: (%.1f,%.1f,%.1f)", cameraPos.x, cameraPos.y, cameraPos.z);
+        ImGui::Text("rotation: (%.1f,%.1f,%.1f)", cameraFront.x, cameraFront.y, cameraFront.z);
+        ImGui::Unindent();
+        ImGui::NextColumn();
+
+        ImGui::Text("World");
+        ImGui::Indent(10.0f);
+        ImGui::Text("chunks: %d (%d,%d)", WORLD_WIDTH*WORLD_DEPTH, WORLD_WIDTH, WORLD_DEPTH);
+        ImGui::Unindent();
+        ImGui::NextColumn();
+
+        ImGui::Text("Ray");
+        ImGui::Indent(10.0f);
+        ImGui::Text("hit: %s", ray.didHit ? "true" : "false");
+        if (ray.didHit) {
+          ImGui::Text("chunk: (%d,%d,%d)", ray.chunk.x, ray.chunk.y, ray.chunk.z);
+          ImGui::Text("block: (%d,%d,%d)", ray.block.x, ray.block.y, ray.block.z);
+        }
+        ImGui::Unindent();
+        ImGui::NextColumn();
+
+        ImGui::End();
+      }
+      ImGui::PopStyleColor();
+    }
+
+    ImGui::Render();
+
     glfwSwapBuffers(window);
-    glfwPollEvents();
   }
 
+  ImGui_ImplGlfwGL3_Shutdown();
   glfwTerminate();
 
   return 0;
