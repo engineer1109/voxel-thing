@@ -15,7 +15,7 @@ World::World() {
         y // y->z
       };
 
-      list.push_back(std::make_shared<Chunk>(this, i));
+      list.push_back(std::make_shared<Chunk>(this, i, glm::vec3(i.x*CHUNK_WIDTH, i.y*CHUNK_HEIGHT, i.z*CHUNK_DEPTH)));
     }
 
     chunks.push_back(list);

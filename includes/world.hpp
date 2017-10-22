@@ -8,8 +8,8 @@
 #include <chunk.hpp>
 #include <utils.hpp>
 
-constexpr int WORLD_WIDTH = 1;
-constexpr int WORLD_DEPTH = 1;
+constexpr int WORLD_WIDTH = 2;
+constexpr int WORLD_DEPTH = 2;
 
 class World {
   public:
