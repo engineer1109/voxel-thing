@@ -125,7 +125,7 @@ int main(void) {
 
   stbi_set_flip_vertically_on_load(true);
 
-  Texture dirtTexture("img/dirt.jpg");
+  Texture dirtTexture("img/ground.jpeg");
   Texture crosshairTexture("img/crosshair.jpg");
 
   Mesh crosshairMesh(quad, { VEC3_VERTEX_ATTRIB, VEC3_VERTEX_ATTRIB, VEC2_VERTEX_ATTRIB });
