@@ -198,8 +198,7 @@ int main(void) {
     RayHit ray = world.ray(camera.pos, camera.front);
 
     if (ray.didHit && (!lastMouseButton && mouseButton)) {
-      world.chunks[ray.chunk.z][ray.chunk.x]->data[ray.block.y + 1][ray.block.z][ray.block.x] = SOLID;
-
+      world.chunks[ray.chunk.z][ray.chunk.x]->data[ray.block.y][ray.block.z][ray.block.x] = SOLID;
       world.reloadChunks();
 
       mouseButton = false;

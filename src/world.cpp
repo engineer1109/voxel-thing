@@ -57,15 +57,19 @@ void World::reloadChunks() {
 }
 
 RayHit World::ray(glm::vec3 origin, glm::vec3 direction) {
+  Index pChunkIndex;
+  Index pBlockIndex;
   Index chunkIndex;
   Index blockIndex;
 
-  glm::vec3 offset = {0.25f, 0.0f, 0.25f};
-  glm::vec3 i = origin; //+ offset;
+  glm::vec3 i = origin;
 
-  direction /= 200;
+  direction /= 25;
 
   while(true) {
+    pChunkIndex = chunkIndex;
+    pBlockIndex = blockIndex;
+
     chunkIndex = {
       (int) (floor(i.x) / CHUNK_WIDTH),
       0,
@@ -101,5 +105,5 @@ RayHit World::ray(glm::vec3 origin, glm::vec3 direction) {
     i += direction;
   }
 
-  return RayHit{true, chunkIndex, blockIndex, origin, i};
+  return RayHit{true, pChunkIndex, pBlockIndex, origin, i};
 }
