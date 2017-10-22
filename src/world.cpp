@@ -60,33 +60,33 @@ RayHit World::ray(glm::vec3 origin, glm::vec3 direction) {
   Index chunkIndex;
   Index blockIndex;
 
-  glm::vec3 offset = {0.25f, 0, 0.25f};
-  glm::vec3 i = origin + offset;
+  glm::vec3 offset = {0.25f, 0.0f, 0.25f};
+  glm::vec3 i = origin; //+ offset;
 
-  direction /= 50;
+  direction /= 200;
 
   while(true) {
     chunkIndex = {
-      (int) (i.x / CHUNK_WIDTH),
+      (int) (floor(i.x) / CHUNK_WIDTH),
       0,
-      (int) (i.z / CHUNK_DEPTH)
+      (int) (floor(i.z) / CHUNK_DEPTH)
     };
 
     blockIndex = {
-      ((int) i.x) % CHUNK_WIDTH,
-      ((int) i.y) % CHUNK_HEIGHT,
-      ((int) i.z) % CHUNK_WIDTH
+      ((int) floor(i.x)) % CHUNK_WIDTH,
+      ((int) floor(i.y)) % CHUNK_HEIGHT,
+      ((int) floor(i.z)) % CHUNK_WIDTH
     };
 
-    if (chunkIndex.x < 0 || chunkIndex.z < 0) {
-      // throw "this goes nowhere";
+    if (blockIndex.x < 0 || blockIndex.y < 0 || blockIndex.z < 0) {
+      return RayHit{false, chunkIndex, blockIndex};
+    }
 
+    if (chunkIndex.x < 0 || chunkIndex.z < 0) {
       return RayHit{false, chunkIndex, blockIndex};
     }
 
     if (chunkIndex.x >= WORLD_WIDTH || chunkIndex.z >= WORLD_DEPTH) {
-      // throw "this also goes nowhere";
-
       return RayHit{false, chunkIndex, blockIndex};
     }
 
@@ -101,7 +101,5 @@ RayHit World::ray(glm::vec3 origin, glm::vec3 direction) {
     i += direction;
   }
 
-  // throw "fuck you";
-
-  return RayHit{true, chunkIndex, blockIndex};
+  return RayHit{true, chunkIndex, blockIndex, origin, i};
 }

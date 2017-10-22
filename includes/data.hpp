@@ -2,15 +2,12 @@
 #define DATA_H
 
 std::vector<float> xyzLines = {
-  // x axis         red
-  -1.0f, 0.0f, 0.0f, 0.2f, 0.0f, 0.0f,
-  1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-  // y axis         blue
-  0.0f, -1.0f, 0.0f, 0.0f, 0.2f, 0.0f,
-  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-  // z axis         green
-  0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.2f,
-  0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+  0.0f, 0.0f, 0.0f, 0.2f, 0.0f, 0.0f,
+  10.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+  0.0f, 0.0f, 0.0f, 0.0f, 0.2f, 0.0f,
+  0.0f, 10.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.2f,
+  0.0f, 0.0f, 10.0f, 0.0f, 0.0f, 1.0f
 };
 
 std::vector<float> quad = {

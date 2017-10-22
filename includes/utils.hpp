@@ -1,6 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <glm/glm.hpp>
 #include <vector>
 
 float clamp(float x, float upper, float lower);
@@ -22,6 +23,9 @@ struct RayHit {
 
   Index chunk;
   Index block;
+
+  glm::vec3 start;
+  glm::vec3 end;
 };
 
 #endif

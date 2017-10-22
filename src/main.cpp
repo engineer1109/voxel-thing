@@ -51,6 +51,13 @@ void framebufferSizeCallback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
 }
 
+std::vector<float> rayLineVertData(glm::vec3 start, glm::vec3 end) {
+  return {
+    start.x, start.y, start.z, 1.0f, 1.0f, 1.0f,
+    end.x, end.y, end.z, 1.0f, 1.0f, 1.0f
+  };
+}
+
 void processInput(GLFWwindow *window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
@@ -76,7 +83,7 @@ void processInput(GLFWwindow *window) {
     debugMode = true;
   }
 
-  if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_RELEASE) {
+  if (debugMode && glfwGetKey(window, GLFW_KEY_F3) == GLFW_RELEASE) {
     debugMode = false;
   }
 }
@@ -176,6 +183,9 @@ int main(void) {
   Mesh posGizmoMesh(xyzLines, { VEC3_VERTEX_ATTRIB, VEC3_VERTEX_ATTRIB }, GL_LINES);
   posGizmoMesh.bind();
 
+  Mesh rayLineMesh(std::vector<float>(), { VEC3_VERTEX_ATTRIB, VEC3_VERTEX_ATTRIB }, GL_LINES);
+  rayLineMesh.bind();
+
   World world;
 
   // Setup ImGui binding
@@ -209,6 +219,7 @@ int main(void) {
         std::shared_ptr<Chunk> chunk = world.chunks[y][x];
 
         glm::mat4 model;
+        model = glm::translate(model, glm::vec3(0.5f, 0.5f, 0.5f));
         model = glm::translate(model, chunk->transform);
 
         blockLightingShader.setMatrix("model", glm::value_ptr(model));
@@ -220,13 +231,27 @@ int main(void) {
     posGizmoShader.use();
 
     glm::mat4 model;
-    model = glm::translate(model, glm::vec3(1, 1, 1));
+    model = glm::translate(model, glm::vec3(0, 0, 0));
 
     posGizmoShader.setMatrix("view", glm::value_ptr(view));
     posGizmoShader.setMatrix("projection", glm::value_ptr(projection));
     posGizmoShader.setMatrix("model", glm::value_ptr(model));
 
     posGizmoMesh.draw();
+
+    RayHit ray = world.ray(cameraPos, cameraFront);
+
+    if (ray.didHit && (!lastMouseButton && mouseButton)) {
+      world.chunks[ray.chunk.z][ray.chunk.x]->data[ray.block.y + 1][ray.block.z][ray.block.x] = SOLID;
+
+      world.reloadChunks();
+
+      mouseButton = false;
+
+      rayLineMesh.updateData(rayLineVertData(ray.start, ray.end));
+    }
+
+    rayLineMesh.draw();
 
     hudShader.use();
 
@@ -237,20 +262,9 @@ int main(void) {
     crosshairTexture.use();
     crosshairMesh.draw();
 
-    RayHit ray = world.ray(cameraPos, cameraFront);
-
-    if (ray.didHit && (!lastMouseButton && mouseButton)) {
-      world.chunks[ray.chunk.z][ray.chunk.x]->data[ray.block.y + 1][ray.block.z][ray.block.x] = SOLID;
-
-      world.reloadChunks();
-
-      mouseButton = false;
-    }
-
     ImGui_ImplGlfwGL3_NewFrame();
 
-    if (debugMode) {
-      ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.0f, 1.0f, 1.0f, 0.3f)); // Transparent background
+    if (debugMode) { ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.0f, 1.0f, 1.0f, 0.3f)); // Transparent background
       if (ImGui::Begin("Example: Fixed Overlay", &debugMode, ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoResize|ImGuiWindowFlags_AlwaysAutoResize|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoSavedSettings))
       {
         ImGui::Text("Voxel Bomber 0.0.1 [debug]");

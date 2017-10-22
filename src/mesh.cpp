@@ -46,6 +46,12 @@ void Mesh::bind() {
   }
 }
 
+void Mesh::updateData(std::vector<float> d) {
+  data = d;
+
+  update();
+}
+
 void Mesh::update() {
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, data.size() * vertexAttribDataSize, &data.front(), GL_DYNAMIC_DRAW);

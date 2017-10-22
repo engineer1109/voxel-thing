@@ -22,6 +22,7 @@ class Mesh {
 
     void bind();
     void draw();
+    void updateData(std::vector<float> d);
     void update();
   protected:
 
