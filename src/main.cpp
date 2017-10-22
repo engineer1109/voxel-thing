@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <math.h>
 
+#include <key_manager.hpp>
 #include <shader.hpp>
 #include <chunk.hpp>
 #include <mesh.hpp>
@@ -47,6 +48,16 @@ bool firstMouse = true;
 
 bool debugMode = false;
 
+KeyManager keys;
+
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+  if (action != GLFW_PRESS && action != GLFW_RELEASE) {
+    return;
+  }
+
+  keys.set(key, action == GLFW_PRESS);
+}
+
 void framebufferSizeCallback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
 }
@@ -77,14 +88,6 @@ void processInput(GLFWwindow *window) {
 
   if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
     cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltaTime;
-  }
-
-  if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS) {
-    debugMode = true;
-  }
-
-  if (debugMode && glfwGetKey(window, GLFW_KEY_F3) == GLFW_RELEASE) {
-    debugMode = false;
   }
 }
 
@@ -192,11 +195,14 @@ int main(void) {
 	ImGui_ImplGlfwGL3_Init(window, false);
   ImGui::SetMouseCursor(ImGuiMouseCursor_None);
 
+  glfwSetKeyCallback(window, keyCallback);
+
   while (!glfwWindowShouldClose(window)) {
     deltaTime = (float) glfwGetTime() - lastTime;
     lastTime = (float) glfwGetTime();
 
     glfwPollEvents();
+    keys.update();
     processInput(window);
 
     glClearColor(0, 0, 0, 1.0f);
@@ -264,7 +270,12 @@ int main(void) {
 
     ImGui_ImplGlfwGL3_NewFrame();
 
-    if (debugMode) { ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.0f, 1.0f, 1.0f, 0.3f)); // Transparent background
+    if (keys.justDown(GLFW_KEY_F3)) {
+      debugMode = !debugMode;
+    }
+
+    if (debugMode) {
+      ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.0f, 1.0f, 1.0f, 0.3f)); // Transparent background
       if (ImGui::Begin("Example: Fixed Overlay", &debugMode, ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoResize|ImGuiWindowFlags_AlwaysAutoResize|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoSavedSettings))
       {
         ImGui::Text("Voxel Bomber 0.0.1 [debug]");
