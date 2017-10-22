@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <math.h>
 
+#include <camera.hpp>
 #include <key_manager.hpp>
 #include <shader.hpp>
 #include <chunk.hpp>
@@ -25,6 +26,8 @@
 #include <world.hpp>
 #include <block.hpp>
 
+KeyManager KEYS;
+
 const float SCREEN_WIDTH=1600.0f;
 const float SCREEN_HEIGHT=900.0f;
 
@@ -33,29 +36,16 @@ int frames = 0;
 float lastTime;
 float deltaTime;
 
-float cameraSpeed = 5.0f;
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 0.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-
-double lastMouseX = SCREEN_WIDTH/2;
-double lastMouseY = SCREEN_HEIGHT/2;
-
-float pitch = 0;
-float yaw = 0;
-
-bool firstMouse = true;
-
 bool debugMode = false;
 
-KeyManager keys;
+Camera camera;
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
   if (action != GLFW_PRESS && action != GLFW_RELEASE) {
     return;
   }
 
-  keys.set(key, action == GLFW_PRESS);
+  KEYS.set(key, action == GLFW_PRESS);
 }
 
 void framebufferSizeCallback(GLFWwindow *window, int width, int height) {
@@ -73,52 +63,10 @@ void processInput(GLFWwindow *window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
   }
-
-  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-    cameraPos += cameraSpeed * deltaTime * cameraFront;
-  }
-
-  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-    cameraPos -= cameraSpeed * deltaTime * cameraFront;
-  }
-
-  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-    cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltaTime;
-  }
-
-  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-    cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltaTime;
-  }
 }
 
 void mouseCallback(GLFWwindow *window, double x, double y) {
-  if (firstMouse) {
-    lastMouseX = x;
-    lastMouseY = y;
-
-    firstMouse = false;
-  }
-
-  double xOffset = lastMouseX - x;
-  double yOffset = lastMouseY - y;
-
-  double sensitivity = 0.05;
-
-  yaw  -= xOffset * sensitivity;
-  pitch += yOffset * sensitivity;
-
-  pitch = clamp(pitch, -89.0f, 89.0f);
-
-  glm::vec3 front;
-
-  front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-  front.y = sin(glm::radians(pitch));
-  front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-
-  cameraFront = glm::normalize(front);
-
-  lastMouseX = x;
-  lastMouseY = y;
+  camera.mouseCallback(x, y);
 }
 
 bool mouseButton = false;
@@ -202,13 +150,15 @@ int main(void) {
     lastTime = (float) glfwGetTime();
 
     glfwPollEvents();
-    keys.update();
+    KEYS.update();
     processInput(window);
+
+    camera.update(deltaTime);
 
     glClearColor(0, 0, 0, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+    glm::mat4 view = camera.projectionMatrix();
 
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(70.0f), SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f);
@@ -245,7 +195,7 @@ int main(void) {
 
     posGizmoMesh.draw();
 
-    RayHit ray = world.ray(cameraPos, cameraFront);
+    RayHit ray = world.ray(camera.pos, camera.front);
 
     if (ray.didHit && (!lastMouseButton && mouseButton)) {
       world.chunks[ray.chunk.z][ray.chunk.x]->data[ray.block.y + 1][ray.block.z][ray.block.x] = SOLID;
@@ -270,7 +220,7 @@ int main(void) {
 
     ImGui_ImplGlfwGL3_NewFrame();
 
-    if (keys.justDown(GLFW_KEY_F3)) {
+    if (KEYS.justDown(GLFW_KEY_F3)) {
       debugMode = !debugMode;
     }
 
@@ -293,8 +243,8 @@ int main(void) {
 
         ImGui::Text("Camera");
         ImGui::Indent(10.0f);
-        ImGui::Text("position: (%.1f,%.1f,%.1f)", cameraPos.x, cameraPos.y, cameraPos.z);
-        ImGui::Text("rotation: (%.1f,%.1f,%.1f)", cameraFront.x, cameraFront.y, cameraFront.z);
+        ImGui::Text("position: (%.1f,%.1f,%.1f)", camera.pos.x, camera.pos.y, camera.pos.z);
+        ImGui::Text("rotation: (%.1f,%.1f,%.1f)", camera.front.x, camera.front.y, camera.front.z);
         ImGui::Unindent();
         ImGui::NextColumn();
 
