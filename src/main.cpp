@@ -151,9 +151,15 @@ int main(void) {
 
     glfwPollEvents();
     KEYS.update();
-    processInput(window);
-
     camera.update(deltaTime);
+
+    if (KEYS.justDown(GLFW_KEY_F3)) {
+      debugMode = !debugMode;
+    }
+
+    if (KEYS.down(GLFW_KEY_ESCAPE)) {
+      glfwSetWindowShouldClose(window, true);
+    }
 
     glClearColor(0, 0, 0, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -161,7 +167,7 @@ int main(void) {
     glm::mat4 view = camera.projectionMatrix();
 
     glm::mat4 projection;
-    projection = glm::perspective(glm::radians(70.0f), SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f);
+    projection = glm::perspective(glm::radians(95.0f), SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f);
 
     blockLightingShader.use();
 
@@ -184,16 +190,14 @@ int main(void) {
       }
     }
 
-    posGizmoShader.use();
+    hudShader.use();
 
     glm::mat4 model;
-    model = glm::translate(model, glm::vec3(0, 0, 0));
+    model = glm::scale(model, glm::vec3(0.005, 0.005, 0.005));
 
-    posGizmoShader.setMatrix("view", glm::value_ptr(view));
-    posGizmoShader.setMatrix("projection", glm::value_ptr(projection));
-    posGizmoShader.setMatrix("model", glm::value_ptr(model));
-
-    posGizmoMesh.draw();
+    hudShader.setMatrix("model", glm::value_ptr(model));
+    crosshairTexture.use();
+    crosshairMesh.draw();
 
     RayHit ray = world.ray(camera.pos, camera.front);
 
@@ -206,22 +210,22 @@ int main(void) {
       rayLineMesh.updateData(rayLineVertData(ray.start, ray.end));
     }
 
-    rayLineMesh.draw();
+    if (debugMode) {
+      posGizmoShader.use();
 
-    hudShader.use();
+      glm::mat4 model;
+      model = glm::translate(model, glm::vec3(0, 0, 0));
 
-    model = glm::mat4();
-    model = glm::scale(model, glm::vec3(0.005, 0.005, 0.005));
+      posGizmoShader.setMatrix("view", glm::value_ptr(view));
+      posGizmoShader.setMatrix("projection", glm::value_ptr(projection));
+      posGizmoShader.setMatrix("model", glm::value_ptr(model));
 
-    hudShader.setMatrix("model", glm::value_ptr(model));
-    crosshairTexture.use();
-    crosshairMesh.draw();
+      posGizmoMesh.draw();
+
+      rayLineMesh.draw();
+    }
 
     ImGui_ImplGlfwGL3_NewFrame();
-
-    if (KEYS.justDown(GLFW_KEY_F3)) {
-      debugMode = !debugMode;
-    }
 
     if (debugMode) {
       ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.0f, 1.0f, 1.0f, 0.3f)); // Transparent background
