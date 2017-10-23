@@ -2,7 +2,6 @@
 out vec4 FragColor;
 
 uniform vec3 lightColor;
-
 uniform vec3 viewPos;
 uniform vec3 lightPos;
 
@@ -13,7 +12,7 @@ in vec2 TexCoord;
 in vec3 FragPos;
 
 void main() {
-    float ambientStrength = 0.1;
+    float ambientStrength = 0.3;
     float specularStrength = 0.5;
 
     vec3 norm = normalize(Normal);

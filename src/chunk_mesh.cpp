@@ -65,25 +65,25 @@ std::vector<float> ChunkMesh::generateFace(glm::vec3 pos, BlockSide side) {
     case FRONT:
       rotateAround = glm::vec3(0.0f, 1.0f, 0.0f);
       rotateBy = 0.0f;
-      normal = glm::vec3(0.0f, 0.0f, 1.0f);
+      normal = glm::vec3(0.0f, 0.0f, -1.0f);
 
       break;
     case BACK:
       rotateAround = glm::vec3(0.0f, 1.0f, 0.0f);
       rotateBy = 180.0f;
-      normal = glm::vec3(0.0f, 0.0f, -1.0f);
+      normal = glm::vec3(0.0f, 0.0f, 1.0f);
 
       break;
     case LEFT:
       rotateAround = glm::vec3(0.0f, 1.0f, 0.0f);
       rotateBy = 270.0f;
-      normal = glm::vec3(-1.0f, 0.0f, 0.0f);
+      normal = glm::vec3(1.0f, 0.0f, 0.0f);
 
       break;
     case RIGHT:
       rotateAround = glm::vec3(0.0f, 1.0f, 0.0f);
       rotateBy = 90.0f;
-      normal = glm::vec3(1.0f, 0.0f, 0.0f);
+      normal = glm::vec3(-1.0f, 0.0f, 0.0f);
 
       break;
     case TOP:

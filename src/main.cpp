@@ -119,7 +119,8 @@ int main(void) {
   glfwSetCursorPosCallback(window, mouseCallback);
   glfwSetMouseButtonCallback(window, mouseButtonCallback);
 
-  Shader blockLightingShader("shaders/lighting.vert", "shaders/block_lighting.frag");
+  Shader defaultShader("shaders/default.vert", "shaders/default.frag");
+  Shader blockLightingShader("shaders/lighting.vert", "shaders/lighting.frag");
   Shader hudShader("shaders/hud.vert", "shaders/hud.frag");
   Shader posGizmoShader("shaders/pos_gizmo.vert", "shaders/pos_gizmo.frag");
 
@@ -136,6 +137,12 @@ int main(void) {
 
   Mesh rayLineMesh(std::vector<float>(), { VEC3_VERTEX_ATTRIB, VEC3_VERTEX_ATTRIB }, GL_LINES);
   rayLineMesh.bind();
+
+  Mesh lightMesh(cube, { VEC3_VERTEX_ATTRIB, VEC3_VERTEX_ATTRIB});
+  lightMesh.bind();
+
+  glm::vec3 lightPos(0, 2, 0);
+  glm::vec3 lightColor(0.5, 0.2, 0.7);
 
   World world;
 
@@ -161,6 +168,9 @@ int main(void) {
       glfwSetWindowShouldClose(window, true);
     }
 
+    lightPos.x = sin(lastTime);
+    lightPos.z = cos(lastTime);
+
     glClearColor(0, 0, 0, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -173,6 +183,10 @@ int main(void) {
 
     blockLightingShader.setMatrix("view", glm::value_ptr(view));
     blockLightingShader.setMatrix("projection", glm::value_ptr(projection));
+
+    blockLightingShader.setVec3("lightColor", lightColor);
+    blockLightingShader.setVec3("lightPos", lightPos);
+    blockLightingShader.setVec3("viewPos", camera.pos);
 
     dirtTexture.use();
 
@@ -190,9 +204,20 @@ int main(void) {
       }
     }
 
-    hudShader.use();
+    defaultShader.use();
 
     glm::mat4 model;
+    model = glm::translate(model, lightPos);
+
+    defaultShader.setMatrix("model", glm::value_ptr(model));
+    defaultShader.setMatrix("view", glm::value_ptr(view));
+    defaultShader.setMatrix("projection", glm::value_ptr(projection));
+
+    lightMesh.draw();
+
+    hudShader.use();
+
+    model = glm::mat4();
     model = glm::scale(model, glm::vec3(0.005, 0.005, 0.005));
 
     hudShader.setMatrix("model", glm::value_ptr(model));

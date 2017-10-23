@@ -22,6 +22,7 @@ std::vector<float> quad = {
 // this cube does not have the correct winding order.
 // have had to disable face culling.
 std::vector<float> cube = {
+  // pos                norm
   -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
   0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
   0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
