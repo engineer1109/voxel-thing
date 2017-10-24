@@ -8,6 +8,8 @@
 #include <utils.hpp>
 #include <game.hpp>
 
+extern KeyManager KEYS;
+
 void Camera::update(float deltaTime) {
   if (KEYS.down(GLFW_KEY_W)) {
     pos += speed * deltaTime * front;

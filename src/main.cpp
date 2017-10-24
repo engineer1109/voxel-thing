@@ -1,3 +1,16 @@
+#include <application.hpp>
+
+#include <iostream>
+
+int main(void) {
+  Application app;
+
+  app.loop();
+
+  return -1;
+}
+
+/*
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
@@ -85,6 +98,7 @@ void mouseButtonCallback(GLFWwindow *window, int button, int action, int mode) {
 
 int main(void) {
   glfwInit();
+
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -314,3 +328,4 @@ int main(void) {
 
   return 0;
 }
+*/
