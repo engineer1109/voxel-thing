@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include <string>
 
 #include <block.hpp>
 #include <chunk.hpp>
@@ -13,13 +14,17 @@ constexpr int WORLD_DEPTH = 3;
 
 class World {
   public:
-    World();
+    World(std::string fname);
 
     std::vector<std::vector<std::shared_ptr<Chunk>>> chunks;
 
     void reloadChunks();
 
     RayHit ray(glm::vec3 origin, glm::vec3 direction);
+
+    void save(std::string fname);
+  private:
+    bool saveExists(std::string fname);
 };
 
 #endif

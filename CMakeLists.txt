@@ -4,9 +4,11 @@ project(game)
 option(GLFW_BUILD_DOCS OFF)
 option(GLFW_BUILD_EXAMPLES OFF)
 option(GLFW_BUILD_TESTS OFF)
+option(JSON_BuildTests OFF)
 
 add_subdirectory(./vendor/glfw)
 add_subdirectory(./vendor/glm)
+add_subdirectory(./vendor/json)
 
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
@@ -19,6 +21,7 @@ endif()
 
 include_directories(
     ./includes/
+    ./vendor/json/src/
     ./vendor/glad/include/
     ./vendor/glfw/include/
     ./vendor/glm/glm/
@@ -49,7 +52,7 @@ add_definitions(-DGLFW_INCLUDE_NONE
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS}
     ${PROJECT_SHADERS} ${PROJECT_CONFIGS}
     ${VENDORS_SOURCES} ${VENDOR_IMGUI_HEADERS} ${VENDOR_IMGUI_SOURCES})
-target_link_libraries(${PROJECT_NAME} glfw glm
+target_link_libraries(${PROJECT_NAME} glfw glm nlohmann_json
     ${GLFW_LIBRARIES} ${GLAD_LIBRARIES})
 set_target_properties(${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PROJECT_NAME})

@@ -16,7 +16,6 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
   auto fragmentCode = std::string(std::istreambuf_iterator<char>(fp),
                                     (std::istreambuf_iterator<char>()));
 
-
   unsigned int vertexShader = compile(vertexCode.c_str(), GL_VERTEX_SHADER);
   unsigned int fragmentShader = compile(fragmentCode.c_str(), GL_FRAGMENT_SHADER);
 

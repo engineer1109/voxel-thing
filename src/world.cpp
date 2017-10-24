@@ -1,10 +1,30 @@
 #include <world.hpp>
 
+#include <json.hpp>
+
 #include <iostream>
+#include <fstream>
 
 #include <block.hpp>
 
-World::World() {
+using json = nlohmann::json;
+
+World::World(std::string fname) {
+  bool newWorld = false;
+
+  json j;
+  if (!saveExists(fname)) {
+    newWorld = true;
+  } else {
+    std::ifstream file(fname.c_str());
+
+    if (!file.good()) {
+      throw "unable to access file";
+    }
+
+    j << file;
+  }
+
   for (int y = 0; y < WORLD_DEPTH; y++) {
     std::vector<std::shared_ptr<Chunk>> list;
 
@@ -15,7 +35,13 @@ World::World() {
         y // y->z
       };
 
-      list.push_back(std::make_shared<Chunk>(this, i, glm::vec3(i.x*CHUNK_WIDTH, i.y*CHUNK_HEIGHT, i.z*CHUNK_DEPTH)));
+      glm::vec3 t(i.x*CHUNK_WIDTH, i.y*CHUNK_HEIGHT, i.z*CHUNK_DEPTH);
+
+      if (newWorld) {
+        list.push_back(std::make_shared<Chunk>(DEFAULT_CHUNK_DATA, this, i, t));
+      } else {
+        list.push_back(std::make_shared<Chunk>(j["world"][y][x],this, i, t));
+      }
     }
 
     chunks.push_back(list);
@@ -106,4 +132,38 @@ RayHit World::ray(glm::vec3 origin, glm::vec3 direction) {
   }
 
   return RayHit{true, pChunkIndex, pBlockIndex, origin, i};
+}
+
+void World::save(std::string fname) {
+  json j;
+
+  std::vector<std::vector<ChunkData>> data;
+
+  for (int y = 0; y < WORLD_DEPTH; y++) {
+    std::vector<ChunkData> row;
+
+    for (int x = 0; x < WORLD_WIDTH; x++) {
+      std::shared_ptr<Chunk> chunk = chunks[y][x];
+
+      row.push_back(chunk->data);
+    }
+
+    data.push_back(row);
+  }
+
+  j["world"] = data;
+
+  std::ofstream file(fname.c_str());
+  if (file.is_open()) {
+    file << j;
+    file.close();
+  } else {
+    std::cout << "Unable to open the mother fucking file" << std::endl;
+  }
+}
+
+bool World::saveExists(std::string fname) {
+  std::ifstream f(fname.c_str());
+
+  return f.good();
 }

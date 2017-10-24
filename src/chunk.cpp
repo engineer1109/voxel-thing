@@ -4,7 +4,8 @@
 
 #include <iostream>
 
-Chunk::Chunk(World *w, Index i, glm::vec3 t) {
+Chunk::Chunk(ChunkData cd, World *w, Index i, glm::vec3 t) {
+  data = cd;
   world = w;
   transform = t;
   index = i;

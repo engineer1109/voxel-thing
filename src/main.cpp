@@ -144,7 +144,7 @@ int main(void) {
   glm::vec3 lightPos(0, 2, 0);
   glm::vec3 lightColor(0.5, 0.2, 0.7);
 
-  World world;
+  World world("world.json");
 
   // Setup ImGui binding
 	ImGui_ImplGlfwGL3_Init(window, false);
@@ -162,6 +162,10 @@ int main(void) {
 
     if (KEYS.justDown(GLFW_KEY_F3)) {
       debugMode = !debugMode;
+    }
+
+    if (KEYS.justDown(GLFW_KEY_F4)) {
+      world.save("world.json");
     }
 
     if (KEYS.down(GLFW_KEY_ESCAPE)) {
