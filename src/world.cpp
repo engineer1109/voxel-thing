@@ -38,6 +38,7 @@ World::World(std::string fname) {
       glm::vec3 t(i.x*CHUNK_WIDTH, i.y*CHUNK_HEIGHT, i.z*CHUNK_DEPTH);
 
       if (newWorld) {
+        std::cout << "loading default chunk data" << std::endl;
         list.push_back(std::make_shared<Chunk>(DEFAULT_CHUNK_DATA, this, i, t));
       } else {
         list.push_back(std::make_shared<Chunk>(j["world"][y][x],this, i, t));

@@ -13,7 +13,6 @@ class Camera {
     glm::vec3 pos = { 0, 0, 0 };
     glm::vec3 front = { 0, 0, -1 };
   private:
-    float speed = 5.0f;
     double sensitivity = 0.05;
 
     glm::vec3 up = { 0.0f, 1.0f, 0.0f};

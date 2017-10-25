@@ -8,9 +8,8 @@
 #include <utils.hpp>
 #include <game.hpp>
 
-extern KeyManager KEYS;
-
 void Camera::update(float deltaTime) {
+  /*
   if (KEYS.down(GLFW_KEY_W)) {
     pos += speed * deltaTime * front;
   }
@@ -25,7 +24,7 @@ void Camera::update(float deltaTime) {
 
   if (KEYS.down(GLFW_KEY_D)) {
     pos += glm::normalize(glm::cross(front, up)) * speed * deltaTime;
-  }
+  }*/
 }
 
 void Camera::mouseCallback(double x, double y) {

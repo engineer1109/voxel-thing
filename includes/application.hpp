@@ -18,8 +18,6 @@ class Application {
     float lastTime;
 
     static void framebufferSizeCallback(GLFWwindow *window, int width, int height);
-    static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-
 };
 
 #endif

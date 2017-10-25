@@ -1,45 +1,42 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <vector>
+
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-#include <key_manager.hpp>
+#include <input.hpp>
+#include <camera.hpp>
+#include <world.hpp>
+#include <entity.hpp>
 #include <shader.hpp>
 #include <texture.hpp>
-#include <mesh.hpp>
-#include <world.hpp>
-#include <camera.hpp>
 
 const float SCREEN_WIDTH=1600.0f;
 const float SCREEN_HEIGHT=900.0f;
 
 class Game {
   public:
-    Game(GLFWwindow *wind);
+    Game(Input *i);
 
-    void update(float deltaTime);
+    Camera camera;
+
+    Input *input;
+
+    std::vector<Entity*> entities;
+
+    void update(float dt);
     void render();
   private:
-    Shader *defaultShader;
-    Shader *lightingShader;
-    Shader *hudShader;
-    Shader *gizmoShader;
+    void add(Entity* e);
 
-    Texture *dirtTexture;
-    Texture *crosshairTexture;
-
-    Mesh *crosshairMesh;
-    Mesh *posGizmoMesh;
-    Mesh *rayLineMesh;
-    Mesh *lightMesh;
+    Player *player;
 
     World *world;
 
-    glm::vec3 lightPos;
-    glm::vec3 lightColor;
-
-    static void mouseCallback(GLFWwindow *window, double x, double y);
+    Shader *worldShader;
+    Texture *worldTexture;
 };
 
 #endif

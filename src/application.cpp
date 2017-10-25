@@ -6,9 +6,7 @@
 #include <glad/glad.h>
 #include <stb_image.h>
 
-#include <key_manager.hpp>
-
-KeyManager KEYS;
+#include <input.hpp>
 
 Application::Application() {
   glfwInit();
@@ -29,7 +27,6 @@ Application::Application() {
   glfwMakeContextCurrent(window);
 
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-  glfwSetKeyCallback(window, keyCallback);
   glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
   if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
@@ -42,7 +39,13 @@ Application::Application() {
 
   stbi_set_flip_vertically_on_load(true);
 
-  game = new Game(window);
+  Input* input = Input::instance();
+
+  glfwSetKeyCallback(window, Input::keyCallback);
+  glfwSetMouseButtonCallback(window, Input::mouseButtonCallback);
+  glfwSetCursorPosCallback(window, Input::mouseMovementCallback);
+
+  game = new Game(input);
 }
 
 void Application::loop() {
@@ -52,9 +55,11 @@ void Application::loop() {
 
     glfwPollEvents();
 
-    KEYS.update();
+    Input *input = Input::instance();
 
-    if (KEYS.justDown(GLFW_KEY_ESCAPE)) {
+    input->update();
+
+    if (input->keys->justDown(GLFW_KEY_ESCAPE)) {
       glfwSetWindowShouldClose(window, true);
     }
 
@@ -63,14 +68,6 @@ void Application::loop() {
 
     glfwSwapBuffers(window);
   }
-}
-
-void Application::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-  if (action != GLFW_PRESS && action != GLFW_RELEASE) {
-    return;
-  }
-
-  KEYS.set(key, action == GLFW_PRESS);
 }
 
 void Application::framebufferSizeCallback(GLFWwindow *window, int width, int height) {
