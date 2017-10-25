@@ -10,8 +10,8 @@ class Camera {
 
     glm::mat4 projectionMatrix();
 
-    glm::vec3 pos = { 0, 0, 0 };
-    glm::vec3 front = { 0, 0, -1 };
+    glm::vec3 pos;
+    glm::vec3 front;
   private:
     double sensitivity = 0.05;
 

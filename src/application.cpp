@@ -7,6 +7,7 @@
 #include <stb_image.h>
 
 #include <input.hpp>
+#include <game_state.hpp>
 
 Application::Application() {
   glfwInit();
@@ -45,7 +46,8 @@ Application::Application() {
   glfwSetMouseButtonCallback(window, Input::mouseButtonCallback);
   glfwSetCursorPosCallback(window, Input::mouseMovementCallback);
 
-  game = new Game(input);
+  state = new GameState(input);
+  state->start();
 }
 
 void Application::loop() {
@@ -63,8 +65,13 @@ void Application::loop() {
       glfwSetWindowShouldClose(window, true);
     }
 
-    game->update(deltaTime);
-    game->render();
+    state->update(deltaTime);
+    state->render();
+
+    if (state->nextState() != NULL) {
+      state = state->nextState();
+      state->start();
+    }
 
     glfwSwapBuffers(window);
   }

@@ -3,31 +3,29 @@
 
 #include <glm/glm.hpp>
 
-class Game;
+class State;
 
 struct Entity {
-  Game *game;
+  State *state;
 
   unsigned int flags = 0;
 
-  void init(Game *g) { game = g; }
+  void _init(State *s) { state = s; init(); }
 
+  virtual void init() {};
   virtual void tick(float dt) {};
-
   virtual void debug() {};
 };
 
 struct Player : public Entity {
-  Player();
-
   float speed = 5.0f;
 
   glm::vec3 position;
   glm::vec3 facing;
   glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 
+  void init();
   void tick(float dt);
-
   void debug();
 };
 

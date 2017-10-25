@@ -1,4 +1,4 @@
-#include <game.hpp>
+#include <game_state.hpp>
 
 #include <iostream>
 
@@ -6,7 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-Game::Game(Input *i) : input(i) {
+void GameState::start() {
   worldShader = new Shader("shaders/lighting.vert", "shaders/lighting.frag");
   worldTexture = new Texture("img/dirt.jpg");
 
@@ -16,7 +16,7 @@ Game::Game(Input *i) : input(i) {
   add(player);
 }
 
-void Game::update(float dt) {
+void GameState::update(float dt) {
   camera.mouseCallback(input->mouseX, input->mouseY);
   player->facing = camera.front;
 
@@ -28,7 +28,7 @@ void Game::update(float dt) {
   camera.pos = player->position;
 }
 
-void Game::render() {
+void GameState::render() {
   glClearColor(0, 0, 0, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -57,10 +57,4 @@ void Game::render() {
       chunk->mesh->draw();
     }
   }
-}
-
-void Game::add(Entity *e) {
-  e->init(this);
-
-  entities.push_back(e);
 }

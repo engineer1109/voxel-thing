@@ -6,7 +6,6 @@
 #include <iostream>
 
 #include <utils.hpp>
-#include <game.hpp>
 
 void Camera::update(float deltaTime) {
   /*

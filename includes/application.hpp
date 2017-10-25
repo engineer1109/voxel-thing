@@ -3,7 +3,7 @@
 
 #include <GLFW/glfw3.h>
 
-#include <game.hpp>
+#include <state.hpp>
 
 class Application {
   public:
@@ -13,7 +13,7 @@ class Application {
   private:
     GLFWwindow *window;
 
-    Game *game;
+    State *state;
     
     float lastTime;
 
