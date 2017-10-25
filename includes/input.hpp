@@ -12,11 +12,21 @@ class Input {
 
     void update();
 
+    void endFrame();
+
     KeyManager *keys;
 
+    bool mouseMoved = false;
+
+    double lastMouseX;
+    double lastMouseY;
     double mouseX;
     double mouseY;
+
     bool mousePrimaryPressed = false;
+
+    double deltaMouseX();
+    double deltaMouseY();
 
     static Input* instance();
 

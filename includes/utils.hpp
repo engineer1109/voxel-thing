@@ -4,6 +4,8 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+const glm::vec3 UP = { 0.0f, 1.0f, 0.0f };
+
 float clamp(float x, float upper, float lower);
 
 float rgbToGl(float v);

@@ -8,6 +8,34 @@ void Input::update() {
   keys->update();
 }
 
+void Input::endFrame() {
+  mouseMoved = false;
+}
+
+double Input::deltaMouseX() {
+  if (!mouseMoved) {
+    return 0;
+  }
+
+  if (!lastMouseX || !mouseX) {
+    return 0;
+  }
+
+  return lastMouseX - mouseX;
+}
+
+double Input::deltaMouseY() {
+  if (!mouseMoved) {
+    return 0;
+  }
+
+  if (!lastMouseY || !mouseY) {
+    return 0;
+  }
+
+  return lastMouseY - mouseY;
+}
+
 Input* Input::instance() {
   if (!s_instance) {
     s_instance = new Input();
@@ -38,6 +66,11 @@ void Input::mouseButtonCallback(GLFWwindow *window, int button, int action, int 
 
 void Input::mouseMovementCallback(GLFWwindow *window, double x, double y) {
   Input* input = Input::instance();
+
+  input->mouseMoved = true;
+
+  input->lastMouseX = input->mouseX;
+  input->lastMouseY = input->mouseY;
 
   input->mouseX = x;
   input->mouseY = y;

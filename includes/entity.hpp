@@ -18,15 +18,19 @@ struct Entity {
 };
 
 struct Player : public Entity {
-  float speed = 5.0f;
+  float speed = 10.0f;
 
   glm::vec3 position;
   glm::vec3 facing;
-  glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 
   void init();
   void tick(float dt);
   void debug();
+
+  private:
+    float sensitivity = 0.3;
+    float pitch = 0;
+    float yaw = 0;
 };
 
 #endif

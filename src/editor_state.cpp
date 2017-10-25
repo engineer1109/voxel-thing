@@ -21,7 +21,7 @@ void EditorState::render() {
 
   worldShader->use();
 
-  glm::mat4 view = camera.projectionMatrix();
+  glm::mat4 view = camera.viewMatrix();
   glm::mat4 projection = glm::perspective(glm::radians(95.0f), SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f);
 
   worldShader->setMatrix("view", glm::value_ptr(view));

@@ -73,6 +73,8 @@ void Application::loop() {
       state->start();
     }
 
+    input->endFrame();
+
     glfwSwapBuffers(window);
   }
 }

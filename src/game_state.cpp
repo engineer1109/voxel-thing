@@ -17,15 +17,10 @@ void GameState::start() {
 }
 
 void GameState::update(float dt) {
-  camera.mouseCallback(input->mouseX, input->mouseY);
-  player->facing = camera.front;
-
   for (int i = 0; i < entities.size(); i++) {
     entities[i]->tick(dt);
     entities[i]->debug();
   }
-
-  camera.pos = player->position;
 }
 
 void GameState::render() {
@@ -35,7 +30,7 @@ void GameState::render() {
   worldTexture->use();
   worldShader->use();
 
-  glm::mat4 view = camera.projectionMatrix();
+  glm::mat4 view = camera.viewMatrix();
   glm::mat4 projection = glm::perspective(glm::radians(95.0f), SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f);
 
   worldShader->setMatrix("view", glm::value_ptr(view));
@@ -43,7 +38,7 @@ void GameState::render() {
 
   worldShader->setVec3("lightColor", glm::vec3(1.0, 1.0, 1.0));
   worldShader->setVec3("lightPos", glm::vec3(0, 2, 0));
-  worldShader->setVec3("viewPos", camera.pos);
+  worldShader->setVec3("viewPos", *camera.position);
 
   for (int y = 0; y < WORLD_DEPTH; y++) {
     for (int x = 0; x < WORLD_WIDTH; x++) {
