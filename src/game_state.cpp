@@ -24,7 +24,7 @@ void GameState::render() {
   worldShader->use();
 
   glm::mat4 view = camera.viewMatrix();
-  glm::mat4 projection = glm::perspective(glm::radians(95.0f), SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f);
+  glm::mat4 projection = camera.projectionMatrix();
 
   worldShader->setMatrix("view", glm::value_ptr(view));
   worldShader->setMatrix("projection", glm::value_ptr(projection));

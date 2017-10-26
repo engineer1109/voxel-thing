@@ -5,6 +5,7 @@
 
 #include <shader.hpp>
 #include <world.hpp>
+#include <mesh.hpp>
 
 // The editor state is where we're going to be building our game from. It'll do a couple of things:
 //  - Provide a way to edit the different voxel types (texture, properties)
@@ -19,6 +20,8 @@ class EditorState : public State {
   private:
     Shader *worldShader;
     World *world;
+
+    Mesh* cubeMesh;
 };
 
 #endif
