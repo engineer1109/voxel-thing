@@ -5,11 +5,16 @@
 
 #include <glad/glad.h>
 #include <stb_image.h>
+#include <imgui.h>
+#include <imgui_impl_glfw_gl3.h>
 
+#include <config.hpp>
 #include <input.hpp>
-#include <game_state.hpp>
+#include <editor_state.hpp>
 
 Application::Application() {
+  Config *config = Config::instance();
+
   glfwInit();
 
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -17,7 +22,7 @@ Application::Application() {
 
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "game", NULL, NULL);
+  window = glfwCreateWindow(config->screenWidth, config->screenHeight, "game", NULL, NULL);
 
   if (window == NULL) {
     glfwTerminate();
@@ -36,7 +41,7 @@ Application::Application() {
 
   glEnable(GL_DEPTH_TEST);
 
-  glViewport(0, 0, SCREEN_WIDTH, SCREEN_WIDTH);
+  glViewport(0, 0, config->screenWidth, config->screenHeight);
 
   stbi_set_flip_vertically_on_load(true);
 
@@ -48,7 +53,11 @@ Application::Application() {
   glfwSetCursorPosCallback(window, Input::mouseMovementCallback);
   glfwSetScrollCallback(window, Input::mouseScrollCallback);
 
-  state = new GameState(input);
+  ImGui_ImplGlfwGL3_Init(window, false);
+  ImGuiIO& io = ImGui::GetIO();
+  io.MouseDrawCursor = true;
+
+  state = new EditorState(config, input);
   state->start();
 }
 
@@ -58,6 +67,7 @@ void Application::loop() {
     lastTime = (float) glfwGetTime();
 
     glfwPollEvents();
+    ImGui_ImplGlfwGL3_NewFrame();
 
     Input *input = Input::instance();
 
@@ -66,6 +76,7 @@ void Application::loop() {
     if (input->keys->justDown(GLFW_KEY_ESCAPE)) {
       glfwSetWindowShouldClose(window, true);
     }
+
 
     state->update(deltaTime);
     state->render();
@@ -77,10 +88,18 @@ void Application::loop() {
 
     input->endFrame();
 
+    ImGui::Render();
     glfwSwapBuffers(window);
   }
+
+  ImGui_ImplGlfwGL3_Shutdown();
+  glfwTerminate();
 }
 
 void Application::framebufferSizeCallback(GLFWwindow *window, int width, int height) {
+  Config* config = Config::instance();
+  config->screenWidth = (float) width;
+  config->screenHeight = (float) height;
+
   glViewport(0, 0, width, height);
 }

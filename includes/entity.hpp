@@ -41,10 +41,18 @@ struct Cursor : public Entity {
 
   void init();
   void tick(float dt);
+
   private:
     float sensitivity = 0.3;
     float pitch = 0;
     float yaw = 0;
+};
+
+struct Tooltip : public Entity {
+  glm::vec3 position;
+
+  void init();
+  void tick(float dt);
 };
 
 #endif

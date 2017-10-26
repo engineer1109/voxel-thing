@@ -6,10 +6,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <utils.hpp>
+#include <config.hpp>
 #include <state.hpp>
 
 glm::mat4 Camera::projectionMatrix() {
-  return glm::perspective(glm::radians(95.0f), SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f);
+  Config *config = Config::instance();
+
+  return glm::perspective(glm::radians(95.0f), config->screenWidth/config->screenHeight, 0.1f, 100.0f);
 }
 
 glm::mat4 Camera::viewMatrix() {
@@ -17,11 +20,13 @@ glm::mat4 Camera::viewMatrix() {
 }
 
 glm::vec3 Camera::screenToDirection(glm::vec2 p) {
-  // convert screen coordinates to normalized device coordinates (clip space).
-  float x = (2.0f*p.x) / SCREEN_WIDTH - 1;
-  float y = (2.0f*p.y) / SCREEN_HEIGHT - 1;
+  Config *config = Config::instance();
 
-  glm::vec4 clipCoords(x, y, -1.0f, 1.0f);
+  // convert screen coordinates to normalized device coordinates (clip space).
+  float x = (2.0f*p.x) / config->screenWidth - 1;
+  float y = (2.0f*p.y) / config->screenHeight - 1;
+
+  glm::vec4 clipCoords(x, -y, -1.0f, 1.0f);
 
   // convert from clip space to eye space
   glm::mat4 invertedProj = glm::inverse(projectionMatrix());

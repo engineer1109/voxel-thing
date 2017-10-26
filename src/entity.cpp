@@ -30,7 +30,7 @@ void Player::tick(float dt) {
   }
 
   if (state->input->keys->justDown(GLFW_KEY_F5)) {
-    state->changeState(new EditorState(state->input));
+    state->changeState(new EditorState(state->config, state->input));
   }
 
   double xOffset = state->input->deltaMouseX();
@@ -88,7 +88,7 @@ void Cursor::tick(float dt) {
     };
 
     if (abs(t.x) > abs(t.y)) {
-      position -= glm::normalize(glm::cross(facing, UP)) * t.x;
+      position += glm::normalize(glm::cross(facing, UP)) * t.x;
     } else {
       position.y += t.y;
     }
@@ -97,5 +97,18 @@ void Cursor::tick(float dt) {
   // translate forward/back
   if (state->input->deltaMouseScrollY != 0) {
     position += ((float)state->input->deltaMouseScrollY) * 100.0f * dt * facing;
+  }
+}
+
+void Tooltip::init() {
+  state->renderer->add(this);
+}
+
+void Tooltip::tick(float dt) {
+  glm::vec3 p = state->camera.screenToDirection(glm::vec2(state->input->mouseX, state->input->mouseY));
+  RayHit ray = state->world->ray(*state->camera.position, p);
+
+  if (ray.didHit) {
+    position = ray.end;
   }
 }

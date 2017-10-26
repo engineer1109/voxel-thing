@@ -1,6 +1,8 @@
 #include <state.hpp>
 
-State::State(Input *i) : input(i) {};
+State::State(Config *c, Input *i) : config(c), input(i) {
+  renderer = new RenderManager();
+};
 
 void State::update(float dt) {
   for (int i = 0; i < entities.size(); i++) {
@@ -9,8 +11,11 @@ void State::update(float dt) {
   }
 }
 
+void State::render() {
+  renderer->render(&camera, config);
+}
+
 void State::start() {};
-void State::render() {};
 void State::exit() {};
 
 void State::changeState(State *s) {

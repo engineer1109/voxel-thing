@@ -6,13 +6,13 @@
 #include <entity.hpp>
 #include <camera.hpp>
 #include <input.hpp>
-
-const float SCREEN_WIDTH=1600.0f;
-const float SCREEN_HEIGHT=900.0f;
+#include <config.hpp>
+#include <render_manager.hpp>
+#include <world.hpp>
 
 class State {
   public:
-    explicit State(Input *i);
+    explicit State(Config *c, Input *i);
 
     // lifecycle
     virtual void start();
@@ -29,6 +29,10 @@ class State {
 
     Camera camera;
     Input *input;
+    Config *config;
+    RenderManager *renderer;
+
+    World *world;
   protected:
     std::vector<Entity*> entities;
   private:
