@@ -7,5 +7,5 @@ int main(void) {
 
   app.loop();
 
-  return -1;
+  return 0;
 }

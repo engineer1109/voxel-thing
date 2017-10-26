@@ -21,9 +21,6 @@ glm::vec3 Camera::screenToDirection(glm::vec2 p) {
   float x = (2.0f*p.x) / SCREEN_WIDTH - 1;
   float y = (2.0f*p.y) / SCREEN_HEIGHT - 1;
 
-  std::cout << "x: " << x << std::endl;
-  std::cout << "y: " << y << std::endl;
-
   glm::vec4 clipCoords(x, y, -1.0f, 1.0f);
 
   // convert from clip space to eye space
@@ -31,15 +28,9 @@ glm::vec3 Camera::screenToDirection(glm::vec2 p) {
   glm::vec4 eyeCoords = invertedProj * clipCoords;
   eyeCoords = glm::vec4(eyeCoords.x, eyeCoords.y, -1.0f, 0.0f);
 
-  std::cout << "ex: " << eyeCoords.x << std::endl;
-  std::cout << "ey: " << eyeCoords.y << std::endl;
-
   // convert from eye space to world space
   glm::mat4 invertedView = glm::inverse(viewMatrix());
   glm::vec4 rayWorld = invertedView * eyeCoords;
-
-  std::cout << "wx: " << rayWorld.x << std::endl;
-  std::cout << "wy: " << rayWorld.y << std::endl;
 
   return glm::normalize(glm::vec3(rayWorld.x, rayWorld.y, rayWorld.z));
 }
