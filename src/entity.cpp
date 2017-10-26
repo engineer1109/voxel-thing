@@ -3,6 +3,7 @@
 #include <math.h>
 #include <iostream>
 
+#include <chunk.hpp>
 #include <utils.hpp>
 #include <editor_state.hpp>
 #include <state.hpp>
@@ -96,7 +97,7 @@ void Cursor::tick(float dt) {
 
   // translate forward/back
   if (state->input->deltaMouseScrollY != 0) {
-    position += ((float)state->input->deltaMouseScrollY) * 100.0f * dt * facing;
+    position += ((float)state->input->deltaMouseScrollY) * 50.0f * dt * facing;
   }
 }
 
@@ -109,6 +110,8 @@ void Tooltip::tick(float dt) {
   RayHit ray = state->world->ray(*state->camera.position, p);
 
   if (ray.didHit) {
-    position = ray.end;
+    position.x = ray.chunk.x * CHUNK_WIDTH + ray.block.x;
+    position.y = ray.block.y + 0.005f;
+    position.z = ray.chunk.z * CHUNK_DEPTH + ray.block.z;
   }
 }

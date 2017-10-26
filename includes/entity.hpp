@@ -51,6 +51,8 @@ struct Cursor : public Entity {
 struct Tooltip : public Entity {
   glm::vec3 position;
 
+  glm::vec3 color = { 1.0f, 0.0f, 0.0f };
+
   void init();
   void tick(float dt);
 };

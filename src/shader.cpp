@@ -54,6 +54,14 @@ void Shader::setVec3(const std::string &name, glm::vec3 v) {
   setVec3(name, v.x, v.y, v.z);
 }
 
+void Shader::setVec4(const std::string &name, float x, float y, float z, float w) {
+  glUniform4f(glGetUniformLocation(ID, name.c_str()), x, y, z, w);
+}
+
+void Shader::setVec4(const std::string &name, glm::vec4 v) {
+  setVec4(name, v.x, v.y, v.z, v.w);
+}
+
 unsigned int Shader::compile(const char* code, unsigned int type) {
   unsigned int shader = glCreateShader(type);
 
