@@ -16,12 +16,16 @@ class Input {
 
     KeyManager *keys;
 
+    // TODO: all mouse related functionality should be refactored out of here
     bool mouseMoved = false;
 
     double lastMouseX;
     double lastMouseY;
     double mouseX;
     double mouseY;
+
+    double deltaMouseScrollX;
+    double deltaMouseScrollY;
 
     bool mousePrimaryPressed = false;
 
@@ -33,6 +37,7 @@ class Input {
     static void keyCallback(GLFWwindow*, int key, int scancode, int action, int mod);
     static void mouseButtonCallback(GLFWwindow*, int button, int action, int mod);
     static void mouseMovementCallback(GLFWwindow*, double x, double y);
+    static void mouseScrollCallback(GLFWwindow*, double xOffset, double yOffset);
   private:
     static Input* s_instance;
 };

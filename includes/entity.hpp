@@ -33,4 +33,18 @@ struct Player : public Entity {
     float yaw = 0;
 };
 
+struct Cursor : public Entity {
+  float speed = 10.0f;
+
+  glm::vec3 position;
+  glm::vec3 facing;
+
+  void init();
+  void tick(float dt);
+  private:
+    float sensitivity = 0.3;
+    float pitch = 0;
+    float yaw = 0;
+};
+
 #endif

@@ -45,6 +45,8 @@ Application::Application() {
   glfwSetKeyCallback(window, Input::keyCallback);
   glfwSetMouseButtonCallback(window, Input::mouseButtonCallback);
   glfwSetCursorPosCallback(window, Input::mouseMovementCallback);
+  glfwSetCursorPosCallback(window, Input::mouseMovementCallback);
+  glfwSetScrollCallback(window, Input::mouseScrollCallback);
 
   state = new GameState(input);
   state->start();

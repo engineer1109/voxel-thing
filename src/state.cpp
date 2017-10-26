@@ -2,8 +2,14 @@
 
 State::State(Input *i) : input(i) {};
 
+void State::update(float dt) {
+  for (int i = 0; i < entities.size(); i++) {
+    entities[i]->tick(dt);
+    entities[i]->debug();
+  }
+}
+
 void State::start() {};
-void State::update(float dt) {};
 void State::render() {};
 void State::exit() {};
 

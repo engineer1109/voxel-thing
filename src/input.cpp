@@ -10,6 +10,9 @@ void Input::update() {
 
 void Input::endFrame() {
   mouseMoved = false;
+
+  deltaMouseScrollX = 0;
+  deltaMouseScrollY = 0;
 }
 
 double Input::deltaMouseX() {
@@ -74,6 +77,13 @@ void Input::mouseMovementCallback(GLFWwindow *window, double x, double y) {
 
   input->mouseX = x;
   input->mouseY = y;
+}
+
+void Input::mouseScrollCallback(GLFWwindow* window, double xOffset, double yOffset) {
+  Input *input = Input::instance();
+
+  input->deltaMouseScrollX = xOffset;
+  input->deltaMouseScrollY = yOffset;
 }
 
 Input* Input::s_instance;

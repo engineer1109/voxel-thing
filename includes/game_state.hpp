@@ -15,7 +15,6 @@ class GameState : public State {
     using State::State;
 
     void start();
-    void update(float dt);
     void render();
   private:
     Player *player;

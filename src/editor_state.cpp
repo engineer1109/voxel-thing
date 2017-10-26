@@ -3,16 +3,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <entity.hpp>
+
 void EditorState::start() {
   worldShader = new Shader("shaders/default.vert", "shaders/default.frag");
   world = new World("world.json");
-}
 
-void EditorState::update(float dt) {
-  for (int i = 0; i < entities.size(); i++) {
-    entities[i]->tick(dt);
-    entities[i]->debug();
-  }
+  Cursor *cursor = new Cursor();
+  add(cursor);
 }
 
 void EditorState::render() {
