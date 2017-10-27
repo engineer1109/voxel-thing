@@ -8,6 +8,7 @@
 #include <block.hpp>
 #include <chunk.hpp>
 #include <utils.hpp>
+#include <block_database.hpp>
 
 constexpr int WORLD_WIDTH = 3;
 constexpr int WORLD_DEPTH = 3;
@@ -23,6 +24,8 @@ class World {
     RayHit ray(glm::vec3 origin, glm::vec3 direction);
 
     void save(std::string fname);
+
+    BlockDatabase *blocks;
   private:
     bool saveExists(std::string fname);
 };

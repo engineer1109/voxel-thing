@@ -1,0 +1,34 @@
+version     1
+fallback    404
+air 0
+
+===
+
+id          0
+name        air
+color       0 0 0 0
+description you breathe it. you need it.
+solid       false
+
+---
+
+id          1
+name        wood
+color       184 135 0 1
+description a block used to build things
+solid       true
+
+---
+
+id          2
+name        stone
+color       74 74 74 1
+description a block used to build things
+solid       true
+
+---
+
+id          404
+name        ladder
+color       255 0 0 1
+solid       false

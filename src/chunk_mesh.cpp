@@ -3,7 +3,9 @@
 #include <iostream>
 #include <glm/gtx/rotate_vector.hpp>
 
-ChunkMesh::ChunkMesh(ChunkData cd, ChunkData ld) : Mesh(std::vector<float>(), chunkMeshVertexAttribList) {
+ChunkMesh::ChunkMesh(BlockDatabase *bd, ChunkData cd, ChunkData ld) : Mesh(std::vector<float>(), chunkMeshVertexAttribList) {
+  blocks = bd;
+
   generate(cd, ld);
 }
 
@@ -17,7 +19,7 @@ void ChunkMesh::generate(ChunkData cd, ChunkData ld) {
     for (int z = 0; z < CHUNK_DEPTH; z++) {
       for (int x = 0; x < CHUNK_WIDTH; x++) {
         int v = chunkData[y][z][x];
-        if (v != SOLID) {
+        if (v == blocks->air) {
           continue;
         }
 
@@ -27,7 +29,7 @@ void ChunkMesh::generate(ChunkData cd, ChunkData ld) {
         std::vector<BlockSide> sides = neededSidesAt(pos);
 
         for (int i = 0; i < sides.size(); i++) {
-          std::vector<float>face = generateFace(pos, sides[i]);
+          std::vector<float>face = generateFace(pos, sides[i], (BlockType) v);
 
           data.insert(data.end(), face.begin(), face.end());
         }
@@ -36,7 +38,7 @@ void ChunkMesh::generate(ChunkData cd, ChunkData ld) {
   }
 }
 
-std::vector<float> ChunkMesh::generateFace(glm::vec3 pos, BlockSide side) {
+std::vector<float> ChunkMesh::generateFace(glm::vec3 pos, BlockSide side, BlockType type) {
   std::vector<glm::vec3> face = {
     glm::vec3(0.5f,  0.5f, -0.5f), // top right
     glm::vec3(0.5f, -0.5f, -0.5f), // bottom right
@@ -104,6 +106,8 @@ std::vector<float> ChunkMesh::generateFace(glm::vec3 pos, BlockSide side) {
       throw "fuck you";
   }
 
+  BlockInfo binfo = blocks->get(type);
+
   std::vector<float> verts;
 
   for (int i = 0; i < face.size(); i++) {
@@ -133,6 +137,12 @@ std::vector<float> ChunkMesh::generateFace(glm::vec3 pos, BlockSide side) {
 
     // light strength
     verts.push_back(lightStrength);
+
+    // color
+    verts.push_back(binfo.color.x);
+    verts.push_back(binfo.color.y);
+    verts.push_back(binfo.color.z);
+    verts.push_back(binfo.color.w);
   }
 
   return verts;

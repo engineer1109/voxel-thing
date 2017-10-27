@@ -5,11 +5,16 @@
 #include <iostream>
 #include <fstream>
 
+#include <config.hpp>
 #include <block.hpp>
 
 using json = nlohmann::json;
 
 World::World(std::string fname) {
+  std::ifstream dbFile(Config::instance()->blockDatabaseFilePath);
+  blocks = new BlockDatabase();
+  blocks->read(dbFile);
+
   ChunkData dcd;
   bool newWorld = false;
 
@@ -126,7 +131,7 @@ RayHit World::ray(glm::vec3 origin, glm::vec3 direction) {
 
     int block = chunk->data[blockIndex.y][blockIndex.z][blockIndex.x];
 
-    if (block == SOLID) {
+    if (block != blocks->air) {
       break;
     }
 

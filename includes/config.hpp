@@ -11,6 +11,7 @@ class Config {
     float screenHeight = 900;
 
     std::string worldFilePath = "world.json";
+    std::string blockDatabaseFilePath = "block.db";
   private:
     static Config* s_instance;
 };
