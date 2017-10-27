@@ -116,21 +116,24 @@ void Tooltip::tick(float dt) {
     return;
   }
 
+  side = diff(ray.chunk, ray.block, ray.prevChunk, ray.prevBlock);
+
   shouldRender = true;
 
   position.x = ray.chunk.x * CHUNK_WIDTH + ray.block.x + 0.5f;
   position.y = ray.block.y + 0.5f;
   position.z = ray.chunk.z * CHUNK_DEPTH + ray.block.z + 0.5f;
 
-  // place block
   if (state->input->mouseClicked()) {
-    state->world->chunks[ray.prevChunk.z][ray.prevChunk.x]->data[ray.prevBlock.y][ray.prevBlock.z][ray.prevBlock.x] = SOLID;
-    state->world->reloadChunks();
+    if (state->input->keys->down(GLFW_KEY_X)) {
+      state->world->chunks[ray.chunk.z][ray.chunk.x]->data[ray.block.y][ray.block.z][ray.block.x] = EMPTY;
+    } else {
+      state->world->chunks[ray.prevChunk.z][ray.prevChunk.x]->data[ray.prevBlock.y][ray.prevBlock.z][ray.prevBlock.x] = SOLID;
+    }
 
     state->input->mousePrimaryPressed = false;
+    state->world->reloadChunks();
   }
-
-  side = diff(ray.chunk, ray.block, ray.prevChunk, ray.prevBlock);
 }
 
 BlockSide Tooltip::diff(Index chunk1, Index block1, Index chunk2, Index block2) {

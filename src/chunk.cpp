@@ -28,6 +28,30 @@ void Chunk::push() {
   mesh->bind();
 }
 
+ChunkData Chunk::defaultData() {
+  ChunkData cd;
+
+  for (int y = 0; y < CHUNK_HEIGHT; y++) {
+    std::vector<std::vector<int>> column;
+    for (int z = 0; z < CHUNK_DEPTH; z++) {
+      std::vector<int> row;
+      for (int x = 0; x < CHUNK_WIDTH; x++) {
+        int v = EMPTY;
+
+        if (y == 0) v = SOLID;
+
+        row.push_back(v);
+      }
+
+      column.push_back(row);
+    }
+
+    cd.push_back(column);
+  }
+
+  return cd;
+}
+
 void Chunk::initLights() {
   lightData.clear();
 

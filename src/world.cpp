@@ -10,11 +10,13 @@
 using json = nlohmann::json;
 
 World::World(std::string fname) {
+  ChunkData dcd;
   bool newWorld = false;
 
   json j;
   if (!saveExists(fname)) {
     newWorld = true;
+    dcd = Chunk::defaultData();
   } else {
     std::ifstream file(fname.c_str());
 
@@ -38,7 +40,7 @@ World::World(std::string fname) {
       glm::vec3 t(i.x*CHUNK_WIDTH, i.y*CHUNK_HEIGHT, i.z*CHUNK_DEPTH);
 
       if (newWorld) {
-        list.push_back(std::make_shared<Chunk>(DEFAULT_CHUNK_DATA, this, i, t));
+        list.push_back(std::make_shared<Chunk>(dcd, this, i, t));
       } else {
         list.push_back(std::make_shared<Chunk>(j["world"][y][x],this, i, t));
       }

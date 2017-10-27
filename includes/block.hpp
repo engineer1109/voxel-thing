@@ -14,7 +14,7 @@ enum BlockSide {
 
 constexpr int CHUNK_WIDTH = 10;
 constexpr int CHUNK_DEPTH = 10;
-constexpr int CHUNK_HEIGHT = 10;
+constexpr int CHUNK_HEIGHT = 40;
 
 typedef std::vector<std::vector<std::vector<int>>> ChunkData;
 
