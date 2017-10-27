@@ -7,7 +7,11 @@
 #include <utils.hpp>
 
 BlockInfo BlockDatabase::get(BlockType type) {
-  return blocks[type];
+  if (blocks.find(type) != blocks.end()) {
+    return blocks.at(type);
+  }
+
+  return blocks[fallback];
 }
 
 void BlockDatabase::read(std::ifstream& file) {
