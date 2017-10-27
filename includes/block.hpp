@@ -1,6 +1,8 @@
 #ifndef BLOCK_H
 #define BLOCK_H
 
+#include <vector>
+
 enum BlockSide {
   TOP,
   BOTTOM,

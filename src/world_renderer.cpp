@@ -8,7 +8,7 @@
 
 WorldRenderer::WorldRenderer() {
   shader = new Shader("shaders/lighting.vert", "shaders/lighting.frag");
-  texture = new Texture("img/dirt.jpg");
+  texture = new Texture("img/gray.jpeg");
 }
 
 void WorldRenderer::render(Camera *camera, Config *config) {

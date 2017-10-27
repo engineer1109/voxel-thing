@@ -26,6 +26,9 @@ struct RayHit {
   Index chunk;
   Index block;
 
+  Index prevChunk;
+  Index prevBlock;
+
   glm::vec3 start;
   glm::vec3 end;
 };

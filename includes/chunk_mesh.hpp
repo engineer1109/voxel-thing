@@ -17,6 +17,7 @@ class ChunkMesh : public Mesh {
     ChunkMesh(ChunkData cd, ChunkData ld);
 
     void generate(ChunkData cd, ChunkData ld);
+
   private:
     std::vector<float> generateFace(glm::vec3, BlockSide);
     std::vector<BlockSide> neededSidesAt(glm::vec3);

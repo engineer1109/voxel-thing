@@ -109,15 +109,15 @@ RayHit World::ray(glm::vec3 origin, glm::vec3 direction) {
     };
 
     if (blockIndex.x < 0 || blockIndex.y < 0 || blockIndex.z < 0) {
-      return RayHit{false, chunkIndex, blockIndex};
+      return RayHit{false};
     }
 
     if (chunkIndex.x < 0 || chunkIndex.z < 0) {
-      return RayHit{false, chunkIndex, blockIndex};
+      return RayHit{false};
     }
 
     if (chunkIndex.x >= WORLD_WIDTH || chunkIndex.z >= WORLD_DEPTH) {
-      return RayHit{false, chunkIndex, blockIndex};
+      return RayHit{false};
     }
 
     std::shared_ptr<Chunk> chunk = chunks[chunkIndex.z][chunkIndex.x];
@@ -131,7 +131,7 @@ RayHit World::ray(glm::vec3 origin, glm::vec3 direction) {
     i += direction;
   }
 
-  return RayHit{true, pChunkIndex, pBlockIndex, origin, i};
+  return RayHit{true, chunkIndex, blockIndex, pChunkIndex, pBlockIndex, origin, i};
 }
 
 void World::save(std::string fname) {

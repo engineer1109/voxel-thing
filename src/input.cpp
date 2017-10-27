@@ -39,6 +39,10 @@ double Input::deltaMouseY() {
   return lastMouseY - mouseY;
 }
 
+bool Input::mouseClicked() {
+  return (!lastMousePrimaryPressed && mousePrimaryPressed);
+}
+
 Input* Input::instance() {
   if (!s_instance) {
     s_instance = new Input();
@@ -59,6 +63,8 @@ void Input::keyCallback(GLFWwindow* window, int key, int scancode, int action, i
 
 void Input::mouseButtonCallback(GLFWwindow *window, int button, int action, int mode) {
   Input* input = Input::instance();
+
+  input->lastMousePrimaryPressed = input->mousePrimaryPressed;
 
   if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
     input->mousePrimaryPressed = true;

@@ -23,8 +23,8 @@ class State {
     // entity mgmt
     void add(Entity *e);
 
+    // state mgmt
     void changeState(State *s);
-
     State* nextState();
 
     Camera camera;

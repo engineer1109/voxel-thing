@@ -7,6 +7,7 @@
 #include <entity.hpp>
 #include <shader.hpp>
 #include <mesh.hpp>
+#include <block.hpp>
 
 class TooltipRenderer : public Renderer {
   public:
@@ -20,6 +21,8 @@ class TooltipRenderer : public Renderer {
 
     Shader *shader;
     Mesh *mesh;
+
+    void rotationForSide(BlockSide side, glm::vec3 *axis, float *degrees);
 };
 
 #endif

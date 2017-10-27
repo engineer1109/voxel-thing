@@ -12,7 +12,7 @@
 glm::mat4 Camera::projectionMatrix() {
   Config *config = Config::instance();
 
-  return glm::perspective(glm::radians(95.0f), config->screenWidth/config->screenHeight, 0.1f, 100.0f);
+  return glm::perspective(glm::radians(70.0f), config->screenWidth/config->screenHeight, 0.1f, 100.0f);
 }
 
 glm::mat4 Camera::viewMatrix() {

@@ -1,5 +1,7 @@
 #include <texture.hpp>
 
+#include <stdexcept>
+
 #include <stb_image.h>
 
 Texture::Texture(std::string fname) {
@@ -8,14 +10,14 @@ Texture::Texture(std::string fname) {
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
   int nChannels;
   unsigned char *data = stbi_load(fname.c_str(), &width, &height, &nChannels, 0);
 
   if (!data) {
-    throw "fuck this";
+    throw std::runtime_error("could not load texture");
 
     return;
   }

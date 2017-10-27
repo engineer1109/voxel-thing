@@ -77,7 +77,6 @@ void Application::loop() {
       glfwSetWindowShouldClose(window, true);
     }
 
-
     state->update(deltaTime);
     state->render();
 
