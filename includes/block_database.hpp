@@ -29,11 +29,12 @@ class BlockDatabase {
     void read(std::ifstream& file);
 
     BlockType air;
+
+    std::map<BlockType,BlockInfo> blocks;
   private:
     int version;
     BlockType fallback;
 
-    std::map<BlockType,BlockInfo> blocks;
 
     ParsedLine parsedLine(std::string line);
 

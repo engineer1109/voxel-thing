@@ -107,6 +107,8 @@ void Tooltip::init() {
 }
 
 void Tooltip::tick(float dt) {
+  getBlockToPlace();
+
   glm::vec3 p = state->camera.screenToDirection(glm::vec2(state->input->mouseX, state->input->mouseY));
   RayHit ray = state->world->ray(*state->camera.position, p);
 
@@ -128,12 +130,24 @@ void Tooltip::tick(float dt) {
     if (state->input->keys->down(GLFW_KEY_X)) {
       state->world->chunks[ray.chunk.z][ray.chunk.x]->data[ray.block.y][ray.block.z][ray.block.x] = EMPTY;
     } else {
-      state->world->chunks[ray.prevChunk.z][ray.prevChunk.x]->data[ray.prevBlock.y][ray.prevBlock.z][ray.prevBlock.x] = SOLID;
+      state->world->chunks[ray.prevChunk.z][ray.prevChunk.x]->data[ray.prevBlock.y][ray.prevBlock.z][ray.prevBlock.x] = blockTypeToPlace;
     }
 
     state->input->mousePrimaryPressed = false;
     state->world->reloadChunks();
   }
+}
+
+void Tooltip::getBlockToPlace() {
+  ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x/2, 0), ImGuiCond_Always, ImVec2(0.5, 0.5));
+  ImGui::Begin("Block choice!", NULL, ImGuiWindowFlags_NoResize|ImGuiWindowFlags_AlwaysAutoResize|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoSavedSettings);
+
+  for (auto& pair : state->world->blocks->blocks) {
+    ImGui::RadioButton(pair.second.name.c_str(), &blockTypeToPlace, pair.second.id);
+    ImGui::SameLine();
+  }
+
+  ImGui::End();
 }
 
 BlockSide Tooltip::diff(Index chunk1, Index block1, Index chunk2, Index block2) {

@@ -62,8 +62,12 @@ struct Tooltip : public Entity {
   void init();
   void tick(float dt);
 
+  void getBlockToPlace();
+
   private:
     BlockSide diff(Index c1, Index b1, Index c2, Index b2);
+
+    int blockTypeToPlace = 1;
 };
 
 struct EditorInfoPane : public Entity {
