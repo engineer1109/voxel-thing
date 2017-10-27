@@ -36,7 +36,16 @@ solid       false
 
 ---
 
+id          4
+name        greenery
+color       44 201 112 1
+description you know, the stuff that recycles oxygen
+solid       true
+
+---
+
 id          404
-name        ladder
+name        blocknotfound
 color       255 0 0 1
+description this block shows up if another block is referenced but does not exist
 solid       false

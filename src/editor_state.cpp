@@ -20,6 +20,9 @@ void EditorState::start() {
   EditorInfoPane *pane = new EditorInfoPane();
   add(pane);
 
+  StateSwitcher *stateSwitcher = new StateSwitcher();
+  add(stateSwitcher);
+
   ImGuiIO& io = ImGui::GetIO();
   io.MouseDrawCursor = true;
 }

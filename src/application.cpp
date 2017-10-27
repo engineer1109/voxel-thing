@@ -17,6 +17,8 @@ Application::Application() {
 
   glfwInit();
 
+  glfwWindowHint(GLFW_SAMPLES, 4);
+
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
@@ -39,6 +41,7 @@ Application::Application() {
     throw std::runtime_error("Failed to initialise GLAD");
   }
 
+  glEnable(GL_MULTISAMPLE);
   glEnable(GL_DEPTH_TEST);
 
   glViewport(0, 0, config->screenWidth, config->screenHeight);

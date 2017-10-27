@@ -22,7 +22,7 @@ void WorldRenderer::render(Camera *camera, Config *config) {
   shader->setMatrix("projection", glm::value_ptr(projection));
 
   shader->setVec3("lightColor", glm::vec3(1.0, 1.0, 1.0));
-  shader->setVec3("lightPos", glm::vec3(0, 2, 0));
+  shader->setVec3("lightPos", glm::vec3(0, 10, 0));
   shader->setVec3("viewPos", *camera->position);
 
   for (int y = 0; y < WORLD_DEPTH; y++) {

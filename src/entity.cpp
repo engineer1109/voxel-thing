@@ -7,6 +7,7 @@
 
 #include <chunk.hpp>
 #include <editor_state.hpp>
+#include <game_state.hpp>
 #include <state.hpp>
 
 void Player::init() {
@@ -29,10 +30,6 @@ void Player::tick(float dt) {
 
   if (state->input->keys->down(GLFW_KEY_D)) {
     position += glm::normalize(glm::cross(facing, UP)) * speed * dt;
-  }
-
-  if (state->input->keys->justDown(GLFW_KEY_F5)) {
-    state->changeState(new EditorState(state->config, state->input));
   }
 
   double xOffset = state->input->deltaMouseX();
@@ -205,4 +202,14 @@ void EditorInfoPane::tick(float dt) {
 
   ImGui::End();
   ImGui::PopStyleColor();
+}
+
+void StateSwitcher::tick(float dt) {
+  if (state->input->keys->justDown(GLFW_KEY_F5)) {
+    state->changeState(new EditorState(state->config, state->input));
+  }
+
+  if (state->input->keys->justDown(GLFW_KEY_F6)) {
+    state->changeState(new GameState(state->config, state->input));
+  }
 }

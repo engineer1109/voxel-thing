@@ -74,4 +74,8 @@ struct EditorInfoPane : public Entity {
   void tick(float dt);
 };
 
+struct StateSwitcher : public Entity {
+  void tick(float dt);
+};
+
 #endif

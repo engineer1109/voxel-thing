@@ -9,4 +9,7 @@ void GameState::start() {
 
   player = new Player;
   add(player);
+
+  StateSwitcher *stateSwitcher = new StateSwitcher();
+  add(stateSwitcher);
 }
