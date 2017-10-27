@@ -61,12 +61,12 @@ void Cursor::init() {
 
 void Cursor::tick(float dt) {
   // change orientation
-  if (state->input->keys->down(GLFW_KEY_Z)) {
+  if (state->input->keys->down(GLFW_KEY_LEFT_ALT)) {
     double xOffset = state->input->deltaMouseX();
     double yOffset = state->input->deltaMouseY();
 
-    yaw -= xOffset * sensitivity;
-    pitch += yOffset * sensitivity;
+    yaw -= xOffset * sensitivity * 2;
+    pitch += yOffset * sensitivity * 2;
 
     pitch = clamp(pitch, -89.0f, 89.0f);
 
@@ -80,7 +80,7 @@ void Cursor::tick(float dt) {
   }
 
   // translate up/down/left/right
-  if (state->input->keys->down(GLFW_KEY_X)) {
+  if (state->input->keys->down(GLFW_KEY_LEFT_SHIFT)) {
     glm::vec3 t = {
       (float)state->input->deltaMouseX() * sensitivity,
       (float)state->input->deltaMouseY() * sensitivity,
@@ -88,7 +88,7 @@ void Cursor::tick(float dt) {
     };
 
     if (abs(t.x) > abs(t.y)) {
-      position += glm::normalize(glm::cross(facing, UP)) * t.x;
+      position -= glm::normalize(glm::cross(facing, UP)) * t.x;
     } else {
       position.y += t.y;
     }
