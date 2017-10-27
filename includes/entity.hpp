@@ -66,4 +66,8 @@ struct Tooltip : public Entity {
     BlockSide diff(Index c1, Index b1, Index c2, Index b2);
 };
 
+struct EditorInfoPane : public Entity {
+  void tick(float dt);
+};
+
 #endif

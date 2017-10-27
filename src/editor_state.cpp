@@ -7,7 +7,7 @@
 #include <entity.hpp>
 
 void EditorState::start() {
-  world = new World("world.json");
+  world = new World(config->worldFilePath);
 
   renderer->add(world);
 
@@ -16,6 +16,9 @@ void EditorState::start() {
 
   Tooltip *tooltip = new Tooltip();
   add(tooltip);
+
+  EditorInfoPane *pane = new EditorInfoPane();
+  add(pane);
 
   ImGuiIO& io = ImGui::GetIO();
   io.MouseDrawCursor = true;
