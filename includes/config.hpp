@@ -10,8 +10,8 @@ class Config {
     float screenWidth = 1600;
     float screenHeight = 900;
 
-    std::string worldFilePath = "world.json";
-    std::string blockDatabaseFilePath = "block.db";
+    std::string worldFilePath = "data/world.json";
+    std::string blockDatabaseFilePath = "data/block.db";
   private:
     static Config* s_instance;
 };

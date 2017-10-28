@@ -44,6 +44,22 @@ solid       true
 
 ---
 
+id          5
+name        brick
+color       227 104 95 1
+description it's pretty solid. used on construction sites.
+solid       true
+
+---
+
+id          6
+name        cobble
+color       100 100 100 1
+description it's pretty solid. used on construction sites.
+solid       true
+
+---
+
 id          404
 name        blocknotfound
 color       255 0 0 1
