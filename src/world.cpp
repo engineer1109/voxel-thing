@@ -90,10 +90,10 @@ void World::reloadChunks() {
 }
 
 RayHit World::ray(glm::vec3 origin, glm::vec3 direction) {
-  Index pChunkIndex;
-  Index pBlockIndex;
-  Index chunkIndex;
-  Index blockIndex;
+  Index pChunkIndex = Index{};
+  Index pBlockIndex = Index{};
+  Index chunkIndex = Index{};
+  Index blockIndex = Index{};
 
   glm::vec3 i = origin;
 

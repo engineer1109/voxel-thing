@@ -3,7 +3,7 @@
 #include <iostream>
 
 void GameState::start() {
-  world = new World("world.json");
+  world = new World(config->worldFilePath);
 
   renderer->add(world);
 

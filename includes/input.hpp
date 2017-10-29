@@ -24,8 +24,8 @@ class Input {
     double mouseX;
     double mouseY;
 
-    double deltaMouseScrollX;
-    double deltaMouseScrollY;
+    double deltaMouseScrollX = 0;
+    double deltaMouseScrollY = 0;
 
     bool lastMousePrimaryPressed = false;
     bool mousePrimaryPressed = false;

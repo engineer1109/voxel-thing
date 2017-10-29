@@ -60,6 +60,7 @@ void Cursor::init() {
 
 void Cursor::tick(float dt) {
   // change orientation
+
   if (state->input->keys->down(GLFW_KEY_LEFT_ALT)) {
     double xOffset = state->input->deltaMouseX();
     double yOffset = state->input->deltaMouseY();
