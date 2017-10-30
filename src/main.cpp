@@ -13,18 +13,19 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-
 #include <matrix.hpp>
 #include <mesh.hpp>
 #include <shader.hpp>
+#include <texture.hpp>
 #include <data.hpp>
+#include <world.hpp>
 
 #ifdef _WINDOWS
 #   pragma comment(lib, "openvr_api")
 #endif
 
 const float nearClip = 0.1f;
-const float farClip = 30.0f;
+const float farClip = 40.0f;
 
 vr::IVRSystem *hmd;
 GLFWwindow *window;
@@ -139,9 +140,6 @@ int main(void) {
 
   fprintf(stderr, "GPU: %s (OpenGL version %s)\n", glGetString(GL_RENDERER), glGetString(GL_VERSION));
 
-  Vector3 bodyTranslation(0.0f, 1.6f, 5.0f);
-  Vector3 bodyRotation;
-
   GLuint framebuffer[numEyes];
   glGenFramebuffers(numEyes, framebuffer);
 
@@ -149,6 +147,8 @@ int main(void) {
   glGenTextures(numEyes, colorRenderTarget);
   GLuint depthRenderTarget[numEyes];
   glGenTextures(numEyes, depthRenderTarget);
+
+  World world("data/world.json");
 
   for (int eye = 0; eye < numEyes; eye++) {
     glBindTexture(GL_TEXTURE_2D, colorRenderTarget[eye]);
@@ -175,7 +175,8 @@ int main(void) {
   Mesh cubeMesh(cube, { VEC3_VERTEX_ATTRIB, VEC3_VERTEX_ATTRIB });
   cubeMesh.bind();
 
-  Shader cubeShader("shaders/default.vert", "shaders/default.frag");
+  Shader worldShader("shaders/lighting.vert", "shaders/lighting.frag");
+  Texture worldTexture("img/gray.jpeg");
 
   vr::TrackedDevicePose_t trackedDevicePose[vr::k_unMaxTrackedDeviceCount];
 
@@ -196,15 +197,30 @@ int main(void) {
       vr::Hmd_Eye vrEye = eyes[eye];
       glm::mat4 viewProjectionMatrix = currentViewProjectionMatrix(vrEye, trackedDevicePose);
 
-      glm::mat4 model;
-      model = glm::translate(model, glm::vec3(2, 2, 2));
+      worldTexture.use();
+      worldShader.use();
 
-      cubeShader.use();
+      worldShader.setVec3("lightColor", glm::vec3(1.0, 1.0, 1.0));
+      worldShader.setVec3("lightPos", glm::vec3(0, 10, 0));
+      worldShader.setVec3("viewPos", glm::vec3(0, 1, 0));
 
-      glm::mat4 vpm = viewProjectionMatrix * model;
+      for (int y = 0; y < WORLD_DEPTH; y++) {
+        for (int x = 0; x < WORLD_WIDTH; x++) {
+          std::shared_ptr<Chunk> chunk = world.chunks[y][x];
 
-      cubeShader.setMatrix("glob", glm::value_ptr(vpm));
-      cubeMesh.draw();
+          glm::mat4 model;
+          model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+          model = glm::translate(model, glm::vec3(0.5f, 0.5f, 0.5f));
+          model = glm::translate(model, chunk->transform);
+
+          glm::mat4 vpm = viewProjectionMatrix * model;
+
+          worldShader.setMatrix("glob", glm::value_ptr(vpm));
+          worldShader.setMatrix("model", glm::value_ptr(model));
+
+          chunk->mesh->draw();
+        }
+      }
 
       const vr::Texture_t tex = { reinterpret_cast<void*>(intptr_t(colorRenderTarget[eye])), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
 
