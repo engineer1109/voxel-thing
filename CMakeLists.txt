@@ -4,11 +4,14 @@ project(game)
 option(GLFW_BUILD_DOCS OFF)
 option(GLFW_BUILD_EXAMPLES OFF)
 option(GLFW_BUILD_TESTS OFF)
+option(BUILD_SHARED ON)
 option(JSON_BuildTests OFF)
+set(BUILD_SHARED ON)
 
 add_subdirectory(./vendor/glfw)
 add_subdirectory(./vendor/glm)
 add_subdirectory(./vendor/json)
+add_subdirectory(./vendor/openvr)
 
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
@@ -27,10 +30,11 @@ include_directories(
     ./vendor/glm/glm/
     ./vendor/stb/include/
     ./vendor/imgui/
-    ./vendor/imgui_impl_glfw_gl3/)
+    ./vendor/imgui_impl_glfw_gl3/
+    ./vendor/openvr/headers/)
 
 file(GLOB VENDORS_SOURCES vendor/glad/src/glad.c vendor/stb/src/stb_image.cpp)
-file(GLOB PROJECT_HEADERS ./includes/*.hpp)
+file(GLOB PROJECT_HEADERS ./includes/*.hpp ./vendor/openvr/headers/*.h)
 file(GLOB PROJECT_SOURCES ./src/*.cpp)
 file(GLOB PROJECT_CONFIGS CMakeLists.txt
     README.md
@@ -52,7 +56,8 @@ add_definitions(-DGLFW_INCLUDE_NONE
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS}
     ${PROJECT_SHADERS} ${PROJECT_CONFIGS}
     ${VENDORS_SOURCES} ${VENDOR_IMGUI_HEADERS} ${VENDOR_IMGUI_SOURCES})
+
 target_link_libraries(${PROJECT_NAME} glfw glm nlohmann_json
-    ${GLFW_LIBRARIES} ${GLAD_LIBRARIES})
+	${GLFW_LIBRARIES} ${GLAD_LIBRARIES} ${CMAKE_CURRENT_SOURCE_DIR}/vendor/openvr/lib/win64/openvr_api.lib)
 set_target_properties(${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
