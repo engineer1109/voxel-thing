@@ -34,8 +34,61 @@ include_directories(
     ./vendor/openvr/headers/)
 
 file(GLOB VENDORS_SOURCES vendor/glad/src/glad.c vendor/stb/src/stb_image.cpp)
-file(GLOB PROJECT_HEADERS ./includes/*.hpp ./vendor/openvr/headers/*.h)
-file(GLOB PROJECT_SOURCES ./src/*.cpp)
+file(GLOB PROJECT_HEADERS 
+    includes/block.hpp
+    includes/block_database.hpp
+    includes/chunk.hpp
+    includes/chunk_mesh.hpp
+    includes/data.hpp
+    includes/editor_state.hpp
+    includes/entity.hpp
+    includes/game_state.hpp
+    includes/tooltip_renderer.hpp
+    includes/vr_state.hpp
+    includes/world.hpp
+    includes/world_renderer.hpp
+    includes/E/application.hpp
+    includes/E/camera.hpp
+    includes/E/config.hpp
+    includes/E/context.hpp
+    includes/E/input.hpp
+    includes/E/key_manager.hpp
+    includes/E/mesh.hpp
+    includes/E/render_manager.hpp
+    includes/E/renderer.hpp
+    includes/E/screen_context.hpp
+    includes/E/shader.hpp
+    includes/E/state.hpp
+    includes/E/texture.hpp
+    includes/E/utils.hpp
+    includes/E/view.hpp
+    includes/E/vr_context.hpp
+    ./vendor/openvr/headers/*.h)
+file(GLOB PROJECT_SOURCES
+    src/main.cpp
+    src/block_database.cpp
+    src/chunk.cpp
+    src/chunk_mesh.cpp
+    src/editor_state.cpp
+    src/entity.cpp
+    src/game_state.cpp
+    src/tooltip_renderer.cpp
+    src/vr_state.cpp
+    src/world.cpp
+    src/world_renderer.cpp
+    src/E/application.cpp
+    src/E/camera.cpp
+    src/E/config.cpp
+    src/E/input.cpp
+    src/E/key_manager.cpp
+    src/E/mesh.cpp
+    src/E/render_manager.cpp
+    src/E/screen_context.cpp
+    src/E/shader.cpp
+    src/E/state.cpp
+    src/E/texture.cpp
+    src/E/utils.cpp
+    src/E/vr_context.cpp)
 file(GLOB PROJECT_CONFIGS CMakeLists.txt
     README.md
     .gitattributes

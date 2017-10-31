@@ -1,10 +1,10 @@
 #ifndef GAME_STATE_H
 #define GAME_STATE_H
 
-#include <state.hpp>
+#include <E/state.hpp>
 #include <entity.hpp>
 
-class GameState : public State {
+class GameState : public E::State {
   public:
     using State::State;
 

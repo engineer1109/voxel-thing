@@ -7,8 +7,8 @@
 #include <glm/gtc/type_ptr.hpp>
 
 WorldRenderer::WorldRenderer() {
-  shader = new Shader("shaders/lighting.vert", "shaders/lighting.frag");
-  texture = new Texture("img/gray.jpeg");
+  shader = new E::Shader("shaders/lighting.vert", "shaders/lighting.frag");
+  texture = new E::Texture("img/gray.jpeg");
 }
 
 void WorldRenderer::preRender() {
@@ -20,7 +20,7 @@ void WorldRenderer::preRender() {
   shader->setVec3("viewPos", glm::vec3(0, 1, 0));
 }
 
-void WorldRenderer::render(View view) {
+void WorldRenderer::render(E::View view) {
   for (int y = 0; y < WORLD_DEPTH; y++) {
     for (int x = 0; x < WORLD_WIDTH; x++) {
       std::shared_ptr<Chunk> chunk = world->chunks[y][x];

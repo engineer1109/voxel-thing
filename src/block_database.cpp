@@ -4,7 +4,7 @@
 #include <ctype.h>
 #include <iostream>
 
-#include <utils.hpp>
+#include <E/utils.hpp>
 
 BlockInfo BlockDatabase::get(BlockType type) {
   if (blocks.find(type) != blocks.end()) {
@@ -148,17 +148,17 @@ glm::vec4 BlockDatabase::stringToVec4(std::string str) {
   glm::vec4 p;
 
   std::string v = untilSpace(str);
-  p.x = rgbToGl(stoi(v));
+  p.x = E::rgbToGl(stoi(v));
 
   str = eatSpace(str);
 
   v = untilSpace(str);
-  p.y = rgbToGl(stoi(v));
+  p.y = E::rgbToGl(stoi(v));
 
   str = eatSpace(str);
 
   v = untilSpace(str);
-  p.z = rgbToGl(stoi(v));
+  p.z = E::rgbToGl(stoi(v));
 
   str = eatSpace(str);
 

@@ -1,4 +1,4 @@
-#include <application.hpp>
+#include <E/application.hpp>
 
 #include <stdexcept>
 #include <iostream>
@@ -8,12 +8,12 @@
 
 #include <game_state.hpp>
 #include <editor_state.hpp>
-#include <config.hpp>
-#include <input.hpp>
-#include <vr_context.hpp>
-#include <screen_context.hpp>
+#include <E/config.hpp>
+#include <E/input.hpp>
+#include <E/vr_context.hpp>
+#include <E/screen_context.hpp>
 
-Application::Application(bool isVR) {
+E::Application::Application(bool isVR) {
   Config* config = Config::instance();
   Input* input = Input::instance();
 
@@ -64,7 +64,7 @@ Application::Application(bool isVR) {
   state->start();
 }
 
-void Application::loop() {
+void E::Application::loop() {
   while (!glfwWindowShouldClose(window)) {
     float deltaTime = (float) glfwGetTime() - lastTime;
     lastTime = (float) glfwGetTime();
@@ -100,7 +100,7 @@ void Application::loop() {
   glfwTerminate();
 }
 
-void Application::framebufferSizeCallback(GLFWwindow *window, int width, int height) {
+void E::Application::framebufferSizeCallback(GLFWwindow *window, int width, int height) {
   Config* config = Config::instance();
   config->screenWidth = (float) width;
   config->screenHeight = (float) height;

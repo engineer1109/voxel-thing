@@ -5,10 +5,11 @@
 
 #include <imgui.h>
 
+#include <E/state.hpp>
+
 #include <chunk.hpp>
 #include <editor_state.hpp>
 #include <game_state.hpp>
-#include <state.hpp>
 
 void Player::init() {
   state->camera.position = &position;
@@ -25,11 +26,11 @@ void Player::tick(float dt) {
   }
 
   if (state->input->keys->down(GLFW_KEY_A)) {
-    position -= glm::normalize(glm::cross(facing, UP)) * speed * dt;
+    position -= glm::normalize(glm::cross(facing, E::UP)) * speed * dt;
   }
 
   if (state->input->keys->down(GLFW_KEY_D)) {
-    position += glm::normalize(glm::cross(facing, UP)) * speed * dt;
+    position += glm::normalize(glm::cross(facing, E::UP)) * speed * dt;
   }
 
   double xOffset = state->input->deltaMouseX();
@@ -38,7 +39,7 @@ void Player::tick(float dt) {
   yaw -= xOffset * sensitivity;
   pitch += yOffset * sensitivity;
 
-  pitch = clamp(pitch, -89.0f, 89.0f);
+  pitch = E::clamp(pitch, -89.0f, 89.0f);
 
   glm::vec3 tfront = {
     cos(glm::radians(yaw)) * cos(glm::radians(pitch)),
@@ -68,7 +69,7 @@ void Cursor::tick(float dt) {
     yaw -= xOffset * sensitivity * 2;
     pitch += yOffset * sensitivity * 2;
 
-    pitch = clamp(pitch, -89.0f, 89.0f);
+    pitch = E::clamp(pitch, -89.0f, 89.0f);
 
     glm::vec3 tfront = {
       cos(glm::radians(yaw)) * cos(glm::radians(pitch)),
@@ -88,7 +89,7 @@ void Cursor::tick(float dt) {
     };
 
     if (abs(t.x) > abs(t.y)) {
-      position -= glm::normalize(glm::cross(facing, UP)) * t.x;
+      position -= glm::normalize(glm::cross(facing, E::UP)) * t.x;
     } else {
       position.y += t.y;
     }
@@ -108,7 +109,7 @@ void Tooltip::tick(float dt) {
   getBlockToPlace();
 
   glm::vec3 p = state->camera.screenToDirection(glm::vec2(state->input->mouseX, state->input->mouseY));
-  RayHit ray = state->world->ray(*state->camera.position, p);
+  E::RayHit ray = state->world->ray(*state->camera.position, p);
 
   if (!ray.didHit) {
     shouldRender = false;
@@ -148,7 +149,7 @@ void Tooltip::getBlockToPlace() {
   ImGui::End();
 }
 
-BlockSide Tooltip::diff(Index chunk1, Index block1, Index chunk2, Index block2) {
+BlockSide Tooltip::diff(E::Index chunk1, E::Index block1, E::Index chunk2, E::Index block2) {
   glm::vec3 a = {};
   a.x = chunk1.x * CHUNK_WIDTH + block1.x;
   a.y = block1.y;

@@ -1,10 +1,10 @@
-#include <texture.hpp>
+#include <E/texture.hpp>
 
 #include <stdexcept>
 
 #include <stb_image.h>
 
-Texture::Texture(std::string fname) {
+E::Texture::Texture(std::string fname) {
   glGenTextures(1, &id);
   glBindTexture(GL_TEXTURE_2D, id);
 
@@ -28,7 +28,7 @@ Texture::Texture(std::string fname) {
   stbi_image_free(data);
 }
 
-void Texture::use(unsigned int unit) {
+void E::Texture::use(unsigned int unit) {
   glActiveTexture(unit);
 
   glBindTexture(GL_TEXTURE_2D, id);

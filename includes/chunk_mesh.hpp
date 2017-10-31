@@ -3,19 +3,20 @@
 
 #include <glm/glm.hpp>
 
-#include <mesh.hpp>
+#include <E/mesh.hpp>
+
 #include <block.hpp>
 #include <block_database.hpp>
 
-const VertexAttribList chunkMeshVertexAttribList = {
-  VEC3_VERTEX_ATTRIB, // vertex
-  VEC2_VERTEX_ATTRIB, // uv coords
-  VEC3_VERTEX_ATTRIB, // normal
-  F_VERTEX_ATTRIB,     // light strength
-  VEC4_VERTEX_ATTRIB // block color tint
+const E::VertexAttribList chunkMeshVertexAttribList = {
+  E::VEC3_VERTEX_ATTRIB, // vertex
+  E::VEC2_VERTEX_ATTRIB, // uv coords
+  E::VEC3_VERTEX_ATTRIB, // normal
+  E::F_VERTEX_ATTRIB,     // light strength
+  E::VEC4_VERTEX_ATTRIB // block color tint
 };
 
-class ChunkMesh : public Mesh {
+class ChunkMesh : public E::Mesh {
   public:
     ChunkMesh(BlockDatabase *bd, ChunkData cd, ChunkData ld);
 

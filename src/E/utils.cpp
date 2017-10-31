@@ -1,8 +1,8 @@
-#include <utils.hpp>
+#include <E/utils.hpp>
 
 #include <random>
 
-float clamp(float x, float lower, float upper) {
+float E::clamp(float x, float lower, float upper) {
   if (x > upper) {
     return upper;
   } else if (x < lower) {
@@ -12,11 +12,11 @@ float clamp(float x, float lower, float upper) {
   return x;
 }
 
-float rgbToGl(float v) {
+float E::rgbToGl(float v) {
     return v/255;
 }
 
-int sum(std::vector<int> v) {
+int E::sum(std::vector<int> v) {
   int total = 0;
 
   for (int i = 0; i < v.size(); i++) {
@@ -26,6 +26,6 @@ int sum(std::vector<int> v) {
   return total;
 }
 
-int randRange(int min, int max) {
+int E::randRange(int min, int max) {
   return min + (rand() % static_cast<int>(max - min + 1));
 }

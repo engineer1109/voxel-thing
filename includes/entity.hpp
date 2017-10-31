@@ -4,16 +4,18 @@
 #include <glm/glm.hpp>
 
 #include <block.hpp>
-#include <utils.hpp>
+#include <E/utils.hpp>
 
-class State;
+namespace E {
+  class State;
+}
 
 struct Entity {
-  State *state;
+  E::State *state;
 
   unsigned int flags = 0;
 
-  void _init(State *s) { state = s; init(); }
+  void _init(E::State *s) { state = s; init(); }
 
   virtual void init() {};
   virtual void tick(float dt) {};
@@ -65,7 +67,7 @@ struct Tooltip : public Entity {
   void getBlockToPlace();
 
   private:
-    BlockSide diff(Index c1, Index b1, Index c2, Index b2);
+    BlockSide diff(E::Index c1, E::Index b1, E::Index c2, E::Index b2);
 
     int blockTypeToPlace = 1;
 };

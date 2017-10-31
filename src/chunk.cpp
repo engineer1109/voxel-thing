@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-Chunk::Chunk(ChunkData cd, World *w, Index i, glm::vec3 t) {
+Chunk::Chunk(ChunkData cd, World *w, E::Index i, glm::vec3 t) {
   data = cd;
   world = w;
   transform = t;
@@ -86,8 +86,8 @@ void Chunk::floodLightAt(int xIndex, int yIndex, int zIndex, int r) {
   for (int y = yIndex - r; y < yIndex + r; y++) {
     for (int z = zIndex - r; z < zIndex + r; z++) {
       for (int x = xIndex - r; x < xIndex + r; x++) {
-        Index chunkIndex = index;
-        Index blockIndex = {x, y, z};
+        E::Index chunkIndex = index;
+        E::Index blockIndex = {x, y, z};
 
         if (x < 0) {
           chunkIndex.x += 1;

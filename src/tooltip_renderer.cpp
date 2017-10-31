@@ -19,12 +19,12 @@ TooltipRenderer::TooltipRenderer() {
     -0.5f,  0.5f, -0.5f // top left
   };
 
-  shader = new Shader("shaders/tooltip.vert", "shaders/tooltip.frag");
-  mesh = new Mesh(quad, { VEC3_VERTEX_ATTRIB });
+  shader = new E::Shader("shaders/tooltip.vert", "shaders/tooltip.frag");
+  mesh = new E::Mesh(quad, { E::VEC3_VERTEX_ATTRIB });
   mesh->bind();
 }
 
-void TooltipRenderer::render(View view) {
+void TooltipRenderer::render(E::View view) {
   shader->use();
 
   for (int i = 0; i < tooltips.size(); i++) {

@@ -1,4 +1,4 @@
-#include <vr_context.hpp>
+#include <E/vr_context.hpp>
 
 #include <iostream>
 
@@ -35,9 +35,7 @@ inline vr::HmdMatrix34_t toOpenVR(const glm::mat4& m) {
   return result;
 }
 
-void VRContext::init() {
-  std::cout << "fuck you mother fucker" << std::endl;
-
+void E::VRContext::init() {
   hmd = initOpenVR(framebufferWidth, framebufferHeight);
 
   glGenFramebuffers(numEyes, framebuffers);
@@ -51,11 +49,11 @@ void VRContext::init() {
 }
 
 // called before state.update
-void VRContext::preFrame() {
+void E::VRContext::preFrame() {
   vr::VRCompositor()->WaitGetPoses(trackedDevicePoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
 }
 
-void VRContext::render(RenderManager *renderer) {
+void E::VRContext::render(RenderManager *renderer) {
   for (int i = 0; i < numEyes; i++) {
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffers[i]);
     glViewport(0, 0, framebufferWidth, framebufferHeight);
@@ -73,11 +71,11 @@ void VRContext::render(RenderManager *renderer) {
 }
 
 // called after state.render
-void VRContext::postFrame() {
+void E::VRContext::postFrame() {
   vr::VRCompositor()->PostPresentHandoff();
 }
 
-View VRContext::viewFor(vr::Hmd_Eye eye) {
+E::View E::VRContext::viewFor(vr::Hmd_Eye eye) {
   assert(trackedDevicePoses[vr::k_unTrackedDeviceIndex_Hmd].bPoseIsValid);
 
   glm::mat4 proj = toGlm(hmd->GetProjectionMatrix(eye, nearClip, farClip));
@@ -89,7 +87,7 @@ View VRContext::viewFor(vr::Hmd_Eye eye) {
   return View(viewProj);
 }
 
-void VRContext::setupEye(int eye) {
+void E::VRContext::setupEye(int eye) {
   // setup color render target
   glBindTexture(GL_TEXTURE_2D, colorTargets[eye]);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -112,7 +110,7 @@ void VRContext::setupEye(int eye) {
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTargets[eye], 0);
 }
 
-std::string VRContext::getHMDString(vr::IVRSystem* pHmd, vr::TrackedDeviceIndex_t unDevice, vr::TrackedDeviceProperty prop, vr::TrackedPropertyError* peError) {
+std::string E::VRContext::getHMDString(vr::IVRSystem* pHmd, vr::TrackedDeviceIndex_t unDevice, vr::TrackedDeviceProperty prop, vr::TrackedPropertyError* peError) {
     uint32_t unRequiredBufferLen = pHmd->GetStringTrackedDeviceProperty(unDevice, prop, nullptr, 0, peError);
     if (unRequiredBufferLen == 0) {
         return "";
@@ -126,7 +124,7 @@ std::string VRContext::getHMDString(vr::IVRSystem* pHmd, vr::TrackedDeviceIndex_
     return sResult;
 }
 
-vr::IVRSystem* VRContext::initOpenVR(unsigned int &hmdWidth, unsigned int &hmdHeight) {
+vr::IVRSystem* E::VRContext::initOpenVR(unsigned int &hmdWidth, unsigned int &hmdHeight) {
   vr::EVRInitError eError = vr::VRInitError_None;
   vr::IVRSystem* hmd = vr::VR_Init(&eError, vr::VRApplication_Scene);
 

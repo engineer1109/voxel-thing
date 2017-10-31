@@ -1,21 +1,21 @@
-#include <input.hpp>
+#include <E/input.hpp>
 
-Input::Input() {
+E::Input::Input() {
   keys = new KeyManager();
 }
 
-void Input::update() {
+void E::Input::update() {
   keys->update();
 }
 
-void Input::endFrame() {
+void E::Input::endFrame() {
   mouseMoved = false;
 
   deltaMouseScrollX = 0;
   deltaMouseScrollY = 0;
 }
 
-double Input::deltaMouseX() {
+double E::Input::deltaMouseX() {
   if (!mouseMoved) {
     return 0;
   }
@@ -27,7 +27,7 @@ double Input::deltaMouseX() {
   return lastMouseX - mouseX;
 }
 
-double Input::deltaMouseY() {
+double E::Input::deltaMouseY() {
   if (!mouseMoved) {
     return 0;
   }
@@ -39,11 +39,11 @@ double Input::deltaMouseY() {
   return lastMouseY - mouseY;
 }
 
-bool Input::mouseClicked() {
+bool E::Input::mouseClicked() {
   return (!lastMousePrimaryPressed && mousePrimaryPressed);
 }
 
-Input* Input::instance() {
+E::Input* E::Input::instance() {
   if (!s_instance) {
     s_instance = new Input();
   }
@@ -51,7 +51,7 @@ Input* Input::instance() {
   return s_instance;
 }
 
-void Input::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+void E::Input::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
   Input* input = Input::instance();
 
   if (action != GLFW_PRESS && action != GLFW_RELEASE) {
@@ -61,7 +61,7 @@ void Input::keyCallback(GLFWwindow* window, int key, int scancode, int action, i
   input->keys->set(key, action == GLFW_PRESS);
 }
 
-void Input::mouseButtonCallback(GLFWwindow *window, int button, int action, int mode) {
+void E::Input::mouseButtonCallback(GLFWwindow *window, int button, int action, int mode) {
   Input* input = Input::instance();
 
   input->lastMousePrimaryPressed = input->mousePrimaryPressed;
@@ -73,7 +73,7 @@ void Input::mouseButtonCallback(GLFWwindow *window, int button, int action, int 
   }
 }
 
-void Input::mouseMovementCallback(GLFWwindow *window, double x, double y) {
+void E::Input::mouseMovementCallback(GLFWwindow *window, double x, double y) {
   Input* input = Input::instance();
 
   input->mouseMoved = true;
@@ -85,11 +85,11 @@ void Input::mouseMovementCallback(GLFWwindow *window, double x, double y) {
   input->mouseY = y;
 }
 
-void Input::mouseScrollCallback(GLFWwindow* window, double xOffset, double yOffset) {
+void E::Input::mouseScrollCallback(GLFWwindow* window, double xOffset, double yOffset) {
   Input *input = Input::instance();
 
   input->deltaMouseScrollX = xOffset;
   input->deltaMouseScrollY = yOffset;
 }
 
-Input* Input::s_instance;
+E::Input* E::Input::s_instance;

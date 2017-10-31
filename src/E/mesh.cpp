@@ -1,10 +1,10 @@
-#include <mesh.hpp>
+#include <E/mesh.hpp>
 
 #include <iostream>
 
-#include <utils.hpp>
+#include <E/utils.hpp>
 
-Mesh::Mesh(std::vector<float> d, VertexAttribList val, unsigned int dm) {
+E::Mesh::Mesh(std::vector<float> d, VertexAttribList val, unsigned int dm) {
   data = d;
   drawMode = dm;
 
@@ -13,19 +13,20 @@ Mesh::Mesh(std::vector<float> d, VertexAttribList val, unsigned int dm) {
   vertexAttribDataSize = sizeof(float);
 }
 
-Mesh::~Mesh() {
+E::Mesh::~Mesh() {
+  // TODO: make this work
   /*
   glDeleteVertexArrays(1, &VAO);
   glDeleteBuffers(1, &VBO);
   */
 }
 
-void Mesh::draw() {
+void E::Mesh::draw() {
   glBindVertexArray(VAO);
   glDrawArrays(drawMode, 0, data.size()/vertexAttribList.size());
 }
 
-void Mesh::bind() {
+void E::Mesh::bind() {
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
 
@@ -46,13 +47,13 @@ void Mesh::bind() {
   }
 }
 
-void Mesh::updateData(std::vector<float> d) {
+void E::Mesh::updateData(std::vector<float> d) {
   data = d;
 
   update();
 }
 
-void Mesh::update() {
+void E::Mesh::update() {
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, data.size() * vertexAttribDataSize, &data.front(), GL_DYNAMIC_DRAW);
 }

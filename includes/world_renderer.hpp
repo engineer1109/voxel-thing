@@ -1,27 +1,28 @@
 #ifndef WORLD_RENDERER_H
 #define WORLD_RENDERER_H
 
-#include <renderer.hpp>
-#include <world.hpp>
-#include <camera.hpp>
-#include <config.hpp>
-#include <shader.hpp>
-#include <texture.hpp>
-#include <view.hpp>
+#include <E/renderer.hpp>
+#include <E/camera.hpp>
+#include <E/config.hpp>
+#include <E/shader.hpp>
+#include <E/texture.hpp>
+#include <E/view.hpp>
 
-class WorldRenderer : public Renderer {
+#include <world.hpp>
+
+class WorldRenderer : public E::Renderer {
   public:
     WorldRenderer();
 
     void preRender();
-    void render(View view);
+    void render(E::View view);
 
     void add(World *w);
   private:
     World *world = NULL;
 
-    Shader *shader;
-    Texture *texture;
+    E::Shader *shader;
+    E::Texture *texture;
 };
 
 #endif

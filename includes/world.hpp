@@ -7,7 +7,7 @@
 
 #include <block.hpp>
 #include <chunk.hpp>
-#include <utils.hpp>
+#include <E/utils.hpp>
 #include <block_database.hpp>
 
 constexpr int WORLD_WIDTH = 3;
@@ -21,7 +21,7 @@ class World {
 
     void reloadChunks();
 
-    RayHit ray(glm::vec3 origin, glm::vec3 direction);
+    E::RayHit ray(glm::vec3 origin, glm::vec3 direction);
 
     void save(std::string fname);
 

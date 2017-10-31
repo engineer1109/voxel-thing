@@ -1,11 +1,11 @@
-#include "shader.hpp"
+#include "E/shader.hpp"
 
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <sstream>
 
-Shader::Shader(const char* vertexPath, const char* fragmentPath) {
+E::Shader::Shader(const char* vertexPath, const char* fragmentPath) {
   std::cout << vertexPath << fragmentPath << std::endl;
 
   std::ifstream vp(vertexPath);
@@ -30,39 +30,39 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
   glDeleteShader(fragmentShader);
 }
 
-void Shader::use() {
+void E::Shader::use() {
   glUseProgram(ID);
 }
 
-void Shader::setInt(const std::string &name, int val) {
+void E::Shader::setInt(const std::string &name, int val) {
   glUniform1i(glGetUniformLocation(ID, name.c_str()), val);
 }
 
-void Shader::setFloat(const std::string &name, float val) {
+void E::Shader::setFloat(const std::string &name, float val) {
   glUniform1f(glGetUniformLocation(ID, name.c_str()), val);
 }
 
-void Shader::setMatrix(const std::string &name, float *val) {
+void E::Shader::setMatrix(const std::string &name, float *val) {
   glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, val);
 }
 
-void Shader::setVec3(const std::string &name, float x, float y, float z) {
+void E::Shader::setVec3(const std::string &name, float x, float y, float z) {
   glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z);
 }
 
-void Shader::setVec3(const std::string &name, glm::vec3 v) {
+void E::Shader::setVec3(const std::string &name, glm::vec3 v) {
   setVec3(name, v.x, v.y, v.z);
 }
 
-void Shader::setVec4(const std::string &name, float x, float y, float z, float w) {
+void E::Shader::setVec4(const std::string &name, float x, float y, float z, float w) {
   glUniform4f(glGetUniformLocation(ID, name.c_str()), x, y, z, w);
 }
 
-void Shader::setVec4(const std::string &name, glm::vec4 v) {
+void E::Shader::setVec4(const std::string &name, glm::vec4 v) {
   setVec4(name, v.x, v.y, v.z, v.w);
 }
 
-unsigned int Shader::compile(const char* code, unsigned int type) {
+unsigned int E::Shader::compile(const char* code, unsigned int type) {
   unsigned int shader = glCreateShader(type);
 
   glShaderSource(shader, 1, &code, NULL);
@@ -74,7 +74,7 @@ unsigned int Shader::compile(const char* code, unsigned int type) {
   return shader;
 }
 
-void Shader::compileStatus(unsigned int shader) {
+void E::Shader::compileStatus(unsigned int shader) {
   int success;
   char infoLog[512];
   glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
@@ -88,7 +88,7 @@ void Shader::compileStatus(unsigned int shader) {
   std::cout << "could not compile shader:" << infoLog << std::endl;
 }
 
-void Shader::linkStatus() {
+void E::Shader::linkStatus() {
   int success;
   char infoLog[512];
   glGetProgramiv(ID, GL_LINK_STATUS, &success);

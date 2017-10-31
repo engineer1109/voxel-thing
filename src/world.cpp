@@ -5,13 +5,13 @@
 #include <iostream>
 #include <fstream>
 
-#include <config.hpp>
+#include <E/config.hpp>
 #include <block.hpp>
 
 using json = nlohmann::json;
 
 World::World(std::string fname) {
-  std::ifstream dbFile(Config::instance()->blockDatabaseFilePath);
+  std::ifstream dbFile(E::Config::instance()->blockDatabaseFilePath);
   blocks = new BlockDatabase();
   blocks->read(dbFile);
 
@@ -36,7 +36,7 @@ World::World(std::string fname) {
     std::vector<std::shared_ptr<Chunk>> list;
 
     for (int x = 0; x < WORLD_WIDTH; x++) {
-      Index i = {
+      E::Index i = {
         x,
         0,
         y // y->z
@@ -89,11 +89,11 @@ void World::reloadChunks() {
   }
 }
 
-RayHit World::ray(glm::vec3 origin, glm::vec3 direction) {
-  Index pChunkIndex = Index{};
-  Index pBlockIndex = Index{};
-  Index chunkIndex = Index{};
-  Index blockIndex = Index{};
+E::RayHit World::ray(glm::vec3 origin, glm::vec3 direction) {
+  E::Index pChunkIndex = E::Index{};
+  E::Index pBlockIndex = E::Index{};
+  E::Index chunkIndex = E::Index{};
+  E::Index blockIndex = E::Index{};
 
   glm::vec3 i = origin;
 
@@ -116,15 +116,15 @@ RayHit World::ray(glm::vec3 origin, glm::vec3 direction) {
     };
 
     if (blockIndex.x < 0 || blockIndex.y < 0 || blockIndex.z < 0) {
-      return RayHit{false};
+      return E::RayHit{false};
     }
 
     if (chunkIndex.x < 0 || chunkIndex.z < 0) {
-      return RayHit{false};
+      return E::RayHit{false};
     }
 
     if (chunkIndex.x >= WORLD_WIDTH || chunkIndex.z >= WORLD_DEPTH) {
-      return RayHit{false};
+      return E::RayHit{false};
     }
 
     std::shared_ptr<Chunk> chunk = chunks[chunkIndex.z][chunkIndex.x];
@@ -138,7 +138,7 @@ RayHit World::ray(glm::vec3 origin, glm::vec3 direction) {
     i += direction;
   }
 
-  return RayHit{true, chunkIndex, blockIndex, pChunkIndex, pBlockIndex, origin, i};
+  return E::RayHit{true, chunkIndex, blockIndex, pChunkIndex, pBlockIndex, origin, i};
 }
 
 void World::save(std::string fname) {

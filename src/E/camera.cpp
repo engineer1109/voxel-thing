@@ -1,25 +1,25 @@
-#include <camera.hpp>
+#include <E/camera.hpp>
 
 #include <iostream>
 
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <utils.hpp>
-#include <config.hpp>
-#include <state.hpp>
+#include <E/utils.hpp>
+#include <E/config.hpp>
+#include <E/state.hpp>
 
-glm::mat4 Camera::projectionMatrix() {
+glm::mat4 E::Camera::projectionMatrix() {
   Config *config = Config::instance();
 
   return glm::perspective(glm::radians(70.0f), config->screenWidth/config->screenHeight, 0.1f, 100.0f);
 }
 
-glm::mat4 Camera::viewMatrix() {
+glm::mat4 E::Camera::viewMatrix() {
   return glm::lookAt(*position, *position + *facing, UP);
 }
 
-glm::vec3 Camera::screenToDirection(glm::vec2 p) {
+glm::vec3 E::Camera::screenToDirection(glm::vec2 p) {
   Config *config = Config::instance();
 
   // convert screen coordinates to normalized device coordinates (clip space).
