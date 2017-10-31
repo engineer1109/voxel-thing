@@ -8,8 +8,8 @@
 #include <E/mesh.hpp>
 #include <E/view.hpp>
 
-#include <entity.hpp>
 #include <block.hpp>
+#include <tooltip.hpp>
 
 class TooltipRenderer : public E::Renderer {
   public:

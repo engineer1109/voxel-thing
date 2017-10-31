@@ -4,7 +4,9 @@
 
 #include <imgui.h>
 
-#include <entity.hpp>
+#include <cursor.hpp>
+#include <editor_info_pane.hpp>
+#include <state_switcher.hpp>
 
 void EditorState::start() {
   world = new World(config->worldFilePath);

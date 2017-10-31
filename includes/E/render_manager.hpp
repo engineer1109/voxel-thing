@@ -4,10 +4,11 @@
 #include <E/view.hpp>
 #include <E/camera.hpp>
 #include <E/config.hpp>
+#include <E/entity.hpp>
 
-#include <entity.hpp>
 #include <world.hpp>
 #include <world_renderer.hpp>
+#include <tooltip.hpp>
 #include <tooltip_renderer.hpp>
 
 namespace E {

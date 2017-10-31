@@ -39,10 +39,13 @@ file(GLOB PROJECT_HEADERS
     includes/block_database.hpp
     includes/chunk.hpp
     includes/chunk_mesh.hpp
+    includes/cursor.hpp
     includes/data.hpp
+    includes/editor_info_pane.hpp
     includes/editor_state.hpp
-    includes/entity.hpp
     includes/game_state.hpp
+    includes/state_switcher.hpp
+    includes/tooltip.hpp
     includes/tooltip_renderer.hpp
     includes/vr_state.hpp
     includes/world.hpp
@@ -69,9 +72,12 @@ file(GLOB PROJECT_SOURCES
     src/block_database.cpp
     src/chunk.cpp
     src/chunk_mesh.cpp
+    src/cursor.cpp
+    src/editor_info_pane.cpp
     src/editor_state.cpp
-    src/entity.cpp
     src/game_state.cpp
+    src/state_switcher.cpp
+    src/tooltip.cpp
     src/tooltip_renderer.cpp
     src/vr_state.cpp
     src/world.cpp

@@ -9,7 +9,7 @@
 #include <E/render_manager.hpp>
 
 #include <world.hpp>
-#include <entity.hpp>
+#include <E/entity.hpp>
 
 namespace E {
   class State {
