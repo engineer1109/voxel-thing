@@ -8,12 +8,13 @@
 #include <shader.hpp>
 #include <mesh.hpp>
 #include <block.hpp>
+#include <view.hpp>
 
 class TooltipRenderer : public Renderer {
   public:
     TooltipRenderer();
 
-    void render(Camera *camera, Config *config);
+    void render(View view);
 
     void add(Tooltip *t);
   private:

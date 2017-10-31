@@ -11,10 +11,6 @@ void State::update(float dt) {
   }
 }
 
-void State::render() {
-  renderer->render(&camera, config);
-}
-
 void State::start() {};
 void State::exit() {};
 

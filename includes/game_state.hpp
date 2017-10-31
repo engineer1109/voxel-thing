@@ -9,8 +9,6 @@ class GameState : public State {
     using State::State;
 
     void start();
-  private:
-    Player *player;
 };
 
 #endif

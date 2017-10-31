@@ -24,14 +24,8 @@ TooltipRenderer::TooltipRenderer() {
   mesh->bind();
 }
 
-void TooltipRenderer::render(Camera *camera, Config *config) {
+void TooltipRenderer::render(View view) {
   shader->use();
-
-  glm::mat4 view = camera->viewMatrix();
-  glm::mat4 projection = camera->projectionMatrix();
-
-  shader->setMatrix("view", glm::value_ptr(view));
-  shader->setMatrix("projection", glm::value_ptr(projection));
 
   for (int i = 0; i < tooltips.size(); i++) {
     Tooltip *t = tooltips[i];
@@ -50,7 +44,9 @@ void TooltipRenderer::render(Camera *camera, Config *config) {
     model = glm::rotate(model, glm::radians(rotateBy), rotateAround);
     model = glm::translate(model, glm::vec3(0, 0, -0.01));
 
-    shader->setMatrix("model", glm::value_ptr(model));
+    glm::mat4 pvm = view.viewProjMatrix * model;
+
+    shader->setMatrix("pvm", glm::value_ptr(pvm));
 
     mesh->draw();
   }

@@ -5,50 +5,55 @@
 
 #include <glad/glad.h>
 #include <stb_image.h>
-#include <imgui.h>
-#include <imgui_impl_glfw_gl3.h>
 
+#include <game_state.hpp>
+#include <editor_state.hpp>
 #include <config.hpp>
 #include <input.hpp>
-#include <editor_state.hpp>
+#include <vr_context.hpp>
+#include <screen_context.hpp>
 
-Application::Application() {
-  Config *config = Config::instance();
+Application::Application(bool isVR) {
+  Config* config = Config::instance();
+  Input* input = Input::instance();
 
   glfwInit();
 
-  glfwWindowHint(GLFW_SAMPLES, 4);
-
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-  window = glfwCreateWindow(config->screenWidth, config->screenHeight, "game", NULL, NULL);
-
-  if (window == NULL) {
-    glfwTerminate();
-
-    throw std::runtime_error("Failed to create GLFW window");
-  }
-
+  window = glfwCreateWindow(config->screenWidth, config->screenHeight, "openvr test", NULL, NULL);
   glfwMakeContextCurrent(window);
-
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-  glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+  glfwSwapInterval(0);
 
   if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
     throw std::runtime_error("Failed to initialise GLAD");
   }
 
-  glEnable(GL_MULTISAMPLE);
+  if (isVR) {
+    state = new GameState(config, input);
+
+    std::cout << "fuck you please" << std::endl;
+
+    context = new VRContext();
+  } else {
+    state = new EditorState(config, input);
+
+    context = new ScreenContext(&state->camera, window);
+
+    // TODO: move these calls to ScreenContext::init();
+    glViewport(0, 0, config->screenWidth, config->screenHeight);
+
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+  }
+
   glEnable(GL_DEPTH_TEST);
 
-  glViewport(0, 0, config->screenWidth, config->screenHeight);
-
-  stbi_set_flip_vertically_on_load(true);
-
-  Input* input = Input::instance();
+  context->init();
 
   glfwSetKeyCallback(window, Input::keyCallback);
   glfwSetMouseButtonCallback(window, Input::mouseButtonCallback);
@@ -56,11 +61,6 @@ Application::Application() {
   glfwSetCursorPosCallback(window, Input::mouseMovementCallback);
   glfwSetScrollCallback(window, Input::mouseScrollCallback);
 
-  ImGui_ImplGlfwGL3_Init(window, false);
-  ImGuiIO& io = ImGui::GetIO();
-  io.MouseDrawCursor = true;
-
-  state = new EditorState(config, input);
   state->start();
 }
 
@@ -70,7 +70,6 @@ void Application::loop() {
     lastTime = (float) glfwGetTime();
 
     glfwPollEvents();
-    ImGui_ImplGlfwGL3_NewFrame();
 
     Input *input = Input::instance();
 
@@ -80,8 +79,12 @@ void Application::loop() {
       glfwSetWindowShouldClose(window, true);
     }
 
+    context->preFrame();
+
     state->update(deltaTime);
-    state->render();
+
+    context->render(state->renderer);
+    context->postFrame();
 
     if (state->nextState() != NULL) {
       state = state->nextState();
@@ -90,11 +93,10 @@ void Application::loop() {
 
     input->endFrame();
 
-    ImGui::Render();
     glfwSwapBuffers(window);
   }
 
-  ImGui_ImplGlfwGL3_Shutdown();
+  //ImGui_ImplGlfwGL3_Shutdown();
   glfwTerminate();
 }
 

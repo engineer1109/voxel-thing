@@ -5,12 +5,14 @@ RenderManager::RenderManager() {
   tooltipRenderer = new TooltipRenderer();
 }
 
-void RenderManager::render(Camera *camera, Config *config) {
-  glClearColor(0, 0, 0, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+void RenderManager::preRender() {
+  worldRenderer->preRender();
+  tooltipRenderer->preRender();
+}
 
-  worldRenderer->render(camera, config);
-  tooltipRenderer->render(camera, config);
+void RenderManager::render(View view) {
+  worldRenderer->render(view);
+  tooltipRenderer->render(view);
 }
 
 void RenderManager::add(World *w) {

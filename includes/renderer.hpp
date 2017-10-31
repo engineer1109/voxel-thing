@@ -1,12 +1,12 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include <camera.hpp>
-#include <config.hpp>
+#include <view.hpp>
 
 class Renderer {
   public:
-    virtual void render(Camera *camera, Config *config) {};
+    virtual void preRender() {};
+    virtual void render(View) {};
 };
 
 #endif

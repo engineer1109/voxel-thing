@@ -3,14 +3,16 @@
 
 #include <GLFW/glfw3.h>
 
+#include <context.hpp>
 #include <state.hpp>
 
 class Application {
   public:
-    Application();
+    Application(bool isVR);
 
     void loop();
   private:
+    Context *context;
     GLFWwindow *window;
 
     State *state;

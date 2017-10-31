@@ -11,20 +11,16 @@ WorldRenderer::WorldRenderer() {
   texture = new Texture("img/gray.jpeg");
 }
 
-void WorldRenderer::render(Camera *camera, Config *config) {
+void WorldRenderer::preRender() {
   texture->use();
   shader->use();
 
-  glm::mat4 view = camera->viewMatrix();
-  glm::mat4 projection = camera->projectionMatrix();
-
-  shader->setMatrix("view", glm::value_ptr(view));
-  shader->setMatrix("projection", glm::value_ptr(projection));
-
   shader->setVec3("lightColor", glm::vec3(1.0, 1.0, 1.0));
   shader->setVec3("lightPos", glm::vec3(0, 10, 0));
-  shader->setVec3("viewPos", *camera->position);
+  shader->setVec3("viewPos", glm::vec3(0, 1, 0));
+}
 
+void WorldRenderer::render(View view) {
   for (int y = 0; y < WORLD_DEPTH; y++) {
     for (int x = 0; x < WORLD_WIDTH; x++) {
       std::shared_ptr<Chunk> chunk = world->chunks[y][x];
@@ -32,8 +28,12 @@ void WorldRenderer::render(Camera *camera, Config *config) {
       glm::mat4 model;
       model = glm::translate(model, glm::vec3(0.5f, 0.5f, 0.5f));
       model = glm::translate(model, chunk->transform);
-
       shader->setMatrix("model", glm::value_ptr(model));
+
+      glm::mat4 vpm = view.viewProjMatrix * model;
+
+      shader->setMatrix("glob", glm::value_ptr(vpm));
+
       chunk->mesh->draw();
     }
   }

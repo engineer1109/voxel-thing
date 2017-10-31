@@ -1,6 +1,7 @@
 #ifndef RENDER_MANAGER_H
 #define RENDER_MANAGER_H
 
+#include <view.hpp>
 #include <world.hpp>
 #include <world_renderer.hpp>
 #include <tooltip_renderer.hpp>
@@ -12,7 +13,8 @@ class RenderManager {
   public:
     RenderManager();
 
-    void render(Camera *camera, Config *config);
+    void preRender();
+    void render(View view);
 
     void add(World *w);
     void add(Tooltip *t);

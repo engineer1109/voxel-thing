@@ -7,12 +7,14 @@
 #include <config.hpp>
 #include <shader.hpp>
 #include <texture.hpp>
+#include <view.hpp>
 
 class WorldRenderer : public Renderer {
   public:
     WorldRenderer();
 
-    void render(Camera *camera, Config *config);
+    void preRender();
+    void render(View view);
 
     void add(World *w);
   private:

@@ -17,7 +17,6 @@ class State {
     // lifecycle
     virtual void start();
     virtual void update(float dt);
-    virtual void render();
     virtual void exit();
 
     // entity mgmt
