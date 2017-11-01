@@ -36,7 +36,7 @@ namespace E {
       View viewFor(vr::Hmd_Eye eye);
       void setupEye(int eye);
       std::string getHMDString(vr::IVRSystem* pHmd, vr::TrackedDeviceIndex_t unDevice, vr::TrackedDeviceProperty prop, vr::TrackedPropertyError* peError = nullptr);
-      vr::IVRSystem* VRContext::initOpenVR(unsigned int &hmdWidth, unsigned int &hmdHeight);
+      vr::IVRSystem* initOpenVR(unsigned int &hmdWidth, unsigned int &hmdHeight);
   };
 };
 

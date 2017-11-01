@@ -1,6 +1,6 @@
 #include <state_switcher.hpp>
 
-#include <GLFW\glfw3.h>
+#include <GLFW/glfw3.h>
 
 #include <E/state.hpp>
 

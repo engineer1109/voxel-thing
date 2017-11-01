@@ -4,7 +4,7 @@
 
 #include <openvr.h>
 
-inline glm::mat4 toGlm(vr::HmdMatrix44_t& m) {
+inline glm::mat4 toGlm(vr::HmdMatrix44_t m) {
 	glm::mat4 result = glm::mat4(
 		m.m[0][0], m.m[1][0], m.m[2][0], m.m[3][0],
 		m.m[0][1], m.m[1][1], m.m[2][1], m.m[3][1],
