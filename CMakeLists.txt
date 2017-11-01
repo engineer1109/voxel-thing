@@ -39,17 +39,17 @@ file(GLOB PROJECT_HEADERS
     includes/block_database.hpp
     includes/chunk.hpp
     includes/chunk_mesh.hpp
-    includes/cursor.hpp
     includes/data.hpp
-    includes/editor_info_pane.hpp
-    includes/editor_state.hpp
     includes/game_state.hpp
-    includes/state_switcher.hpp
-    includes/tooltip.hpp
-    includes/tooltip_renderer.hpp
     includes/vr_state.hpp
     includes/world.hpp
     includes/world_renderer.hpp
+    includes/editor/cursor.hpp
+    includes/editor/editor_info_pane.hpp
+    includes/editor/editor_state.hpp
+    includes/editor/state_switcher.hpp
+    includes/editor/tooltip.hpp
+    includes/editor/tooltip_renderer.hpp
     includes/E/application.hpp
     includes/E/camera.hpp
     includes/E/config.hpp
@@ -82,6 +82,12 @@ file(GLOB PROJECT_SOURCES
     src/vr_state.cpp
     src/world.cpp
     src/world_renderer.cpp
+    src/editor/cursor.cpp
+    src/editor/editor_info_pane.cpp
+    src/editor/editor_state.cpp
+    src/editor/state_switcher.cpp
+    src/editor/tooltip.cpp
+    src/editor/tooltip_renderer.cpp
     src/E/application.cpp
     src/E/camera.cpp
     src/E/config.cpp

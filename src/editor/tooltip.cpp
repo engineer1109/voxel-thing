@@ -1,14 +1,14 @@
-#include <tooltip.hpp>
+#include <editor/tooltip.hpp>
 
 #include <imgui.h>
 
 #include <E/state.hpp>
 
-void Tooltip::init() {
+void editor::Tooltip::init() {
   state->renderer->add(this);
 }
 
-void Tooltip::tick(float dt) {
+void editor::Tooltip::tick(float dt) {
   getBlockToPlace();
 
   glm::vec3 p = state->camera.screenToDirection(glm::vec2(state->input->mouseX, state->input->mouseY));
@@ -40,7 +40,7 @@ void Tooltip::tick(float dt) {
   }
 }
 
-void Tooltip::getBlockToPlace() {
+void editor::Tooltip::getBlockToPlace() {
   ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x/2, 0), ImGuiCond_Always, ImVec2(0.5, 0.5));
   ImGui::Begin("Block choice!", NULL, ImGuiWindowFlags_NoResize|ImGuiWindowFlags_AlwaysAutoResize|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoSavedSettings);
 
@@ -52,7 +52,7 @@ void Tooltip::getBlockToPlace() {
   ImGui::End();
 }
 
-BlockSide Tooltip::diff(E::Index chunk1, E::Index block1, E::Index chunk2, E::Index block2) {
+BlockSide editor::Tooltip::diff(E::Index chunk1, E::Index block1, E::Index chunk2, E::Index block2) {
   glm::vec3 a = {};
   a.x = chunk1.x * CHUNK_WIDTH + block1.x;
   a.y = block1.y;

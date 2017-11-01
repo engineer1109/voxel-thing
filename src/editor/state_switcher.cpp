@@ -1,13 +1,13 @@
-#include <state_switcher.hpp>
+#include <editor/state_switcher.hpp>
 
 #include <GLFW/glfw3.h>
 
 #include <E/state.hpp>
 
-#include <editor_state.hpp>
+#include <editor/editor_state.hpp>
 #include <game_state.hpp>
 
-void StateSwitcher::tick(float dt) {
+void editor::StateSwitcher::tick(float dt) {
   if (state->input->keys->justDown(GLFW_KEY_F5)) {
     state->changeState(new EditorState(state->config, state->input));
   }

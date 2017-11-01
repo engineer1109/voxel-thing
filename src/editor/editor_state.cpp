@@ -1,14 +1,14 @@
-#include <editor_state.hpp>
+#include <editor/editor_state.hpp>
 
 #include <iostream>
 
 #include <imgui.h>
 
-#include <cursor.hpp>
-#include <editor_info_pane.hpp>
-#include <state_switcher.hpp>
+#include <editor/cursor.hpp>
+#include <editor/editor_info_pane.hpp>
+#include <editor/state_switcher.hpp>
 
-void EditorState::start() {
+void editor::EditorState::start() {
   world = new World(config->worldFilePath);
 
   renderer->add(world);

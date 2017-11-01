@@ -1,4 +1,4 @@
-#include <tooltip_renderer.hpp>
+#include <editor/tooltip_renderer.hpp>
 
 #include <iostream>
 #include <stdexcept>
@@ -8,7 +8,7 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-TooltipRenderer::TooltipRenderer() {
+editor::TooltipRenderer::TooltipRenderer() {
   std::vector<float> quad = {
     0.5f,  0.5f, -0.5f, // top right
     0.5f, -0.5f, -0.5f, // bottom right
@@ -24,7 +24,7 @@ TooltipRenderer::TooltipRenderer() {
   mesh->bind();
 }
 
-void TooltipRenderer::render(E::View view) {
+void editor::TooltipRenderer::render(E::View view) {
   shader->use();
 
   for (int i = 0; i < tooltips.size(); i++) {
@@ -56,11 +56,11 @@ void TooltipRenderer::render(E::View view) {
   float rotateBy;
 }
 
-void TooltipRenderer::add(Tooltip *t) {
+void editor::TooltipRenderer::add(Tooltip *t) {
   tooltips.push_back(t);
 }
 
-void TooltipRenderer::rotationForSide(BlockSide side, glm::vec3 *axis, float *degrees) {
+void editor::TooltipRenderer::rotationForSide(BlockSide side, glm::vec3 *axis, float *degrees) {
   switch(side) {
     case FRONT:
       *axis = glm::vec3(0.0f, 1.0f, 0.0f);

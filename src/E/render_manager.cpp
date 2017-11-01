@@ -2,7 +2,7 @@
 
 E::RenderManager::RenderManager() {
   worldRenderer = new WorldRenderer();
-  tooltipRenderer = new TooltipRenderer();
+  tooltipRenderer = new editor::TooltipRenderer();
 }
 
 void E::RenderManager::preRender() {
@@ -19,6 +19,6 @@ void E::RenderManager::add(World *w) {
   worldRenderer->add(w);
 }
 
-void E::RenderManager::add(Tooltip *t) {
+void E::RenderManager::add(editor::Tooltip *t) {
   tooltipRenderer->add(t);
 }

@@ -8,8 +8,8 @@
 
 #include <world.hpp>
 #include <world_renderer.hpp>
-#include <tooltip.hpp>
-#include <tooltip_renderer.hpp>
+#include <editor/tooltip.hpp>
+#include <editor/tooltip_renderer.hpp>
 
 namespace E {
   class RenderManager {
@@ -20,10 +20,10 @@ namespace E {
       void render(View view);
 
       void add(World *w);
-      void add(Tooltip *t);
+      void add(editor::Tooltip *t);
     private:
       WorldRenderer *worldRenderer;
-      TooltipRenderer *tooltipRenderer;
+      editor::TooltipRenderer *tooltipRenderer;
   };
 }
 

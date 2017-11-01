@@ -1,10 +1,10 @@
-#include <editor_info_pane.hpp>
+#include <editor/editor_info_pane.hpp>
 
 #include <imgui.h>
 
 #include <E/state.hpp>
 
-void EditorInfoPane::tick(float dt) {
+void editor::EditorInfoPane::tick(float dt) {
   ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.0f, 1.0f, 1.0f, 0.3f));
   ImGui::SetNextWindowPos(ImVec2(0, 0));
 

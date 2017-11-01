@@ -1,15 +1,15 @@
-#include <cursor.hpp>
+#include <editor/cursor.hpp>
 
 #include <GLFW/glfw3.h>
 
 #include <E/state.hpp>
 
-void Cursor::init() {
+void editor::Cursor::init() {
   state->camera.position = &position;
   state->camera.facing = &facing;
 }
 
-void Cursor::tick(float dt) {
+void editor::Cursor::tick(float dt) {
   // change orientation
 
   if (state->input->keys->down(GLFW_KEY_LEFT_ALT)) {

@@ -7,7 +7,7 @@
 #include <stb_image.h>
 
 #include <game_state.hpp>
-#include <editor_state.hpp>
+#include <editor/editor_state.hpp>
 #include <E/config.hpp>
 #include <E/input.hpp>
 #include <E/vr_context.hpp>
@@ -40,7 +40,7 @@ E::Application::Application(bool isVR) {
 
     context = new VRContext();
   } else {
-    state = new EditorState(config, input);
+    state = new editor::EditorState(config, input);
 
     context = new ScreenContext(&state->camera, window);
 
