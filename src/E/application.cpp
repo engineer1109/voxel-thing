@@ -6,14 +6,10 @@
 #include <glad/glad.h>
 #include <stb_image.h>
 
-#include <game_state.hpp>
-#include <editor/editor_state.hpp>
 #include <E/config.hpp>
 #include <E/input.hpp>
-#include <E/vr_context.hpp>
-#include <E/screen_context.hpp>
 
-E::Application::Application(bool isVR) {
+E::Application::Application() {
   Config* config = Config::instance();
   Input* input = Input::instance();
 
@@ -33,38 +29,25 @@ E::Application::Application(bool isVR) {
     throw std::runtime_error("Failed to initialise GLAD");
   }
 
-  if (isVR) {
-    state = new GameState(config, input);
-
-    std::cout << "fuck you please" << std::endl;
-
-    context = new VRContext();
-  } else {
-    state = new editor::EditorState(config, input);
-
-    context = new ScreenContext(&state->camera, window);
-
-    // TODO: move these calls to ScreenContext::init();
-    glViewport(0, 0, config->screenWidth, config->screenHeight);
-
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
-  }
-
   glEnable(GL_DEPTH_TEST);
 
-  context->init();
-
+  glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
   glfwSetKeyCallback(window, Input::keyCallback);
   glfwSetMouseButtonCallback(window, Input::mouseButtonCallback);
   glfwSetCursorPosCallback(window, Input::mouseMovementCallback);
   glfwSetCursorPosCallback(window, Input::mouseMovementCallback);
   glfwSetScrollCallback(window, Input::mouseScrollCallback);
+}
 
-  state->start();
+void E::Application::use(Context *ctx) {
+  context = ctx;
+
+  context->init();
 }
 
 void E::Application::loop() {
+  state->start();
+
   while (!glfwWindowShouldClose(window)) {
     float deltaTime = (float) glfwGetTime() - lastTime;
     lastTime = (float) glfwGetTime();

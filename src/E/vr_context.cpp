@@ -4,6 +4,10 @@
 
 #include <openvr.h>
 
+#ifdef _WINDOWS
+#   pragma comment(lib, "openvr_api")
+#endif
+
 inline glm::mat4 toGlm(vr::HmdMatrix44_t m) {
 	glm::mat4 result = glm::mat4(
 		m.m[0][0], m.m[1][0], m.m[2][0], m.m[3][0],

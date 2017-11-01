@@ -9,14 +9,16 @@
 namespace E {
   class Application {
     public:
-      Application(bool isVR);
+      Application();
 
       void loop();
-    private:
-      Context *context;
-      GLFWwindow *window;
+    protected:
+      void use(Context *ctx);
 
       State *state;
+      GLFWwindow *window;
+    private:
+      Context *context;
 
       float lastTime;
 

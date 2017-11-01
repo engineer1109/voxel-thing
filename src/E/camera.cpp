@@ -9,6 +9,20 @@
 #include <E/config.hpp>
 #include <E/state.hpp>
 
+E::Camera::Camera() {
+  cameras.push_back(this);
+}
+
+E::Camera::~Camera() {
+  for (int i = 0; i < cameras.size(); i++) {
+    if (cameras[i] == this) {
+      cameras.erase(cameras.begin() + i);
+
+      break;
+    }
+  }
+}
+
 glm::mat4 E::Camera::projectionMatrix() {
   Config *config = Config::instance();
 
@@ -39,3 +53,16 @@ glm::vec3 E::Camera::screenToDirection(glm::vec2 p) {
 
   return glm::normalize(glm::vec3(rayWorld.x, rayWorld.y, rayWorld.z));
 }
+
+E::Camera* E::Camera::main() {
+  Camera* cam;
+  if (cameras.size() == 0) {
+    cam = new Camera();
+  } else {
+    cam = cameras.front();
+  }
+
+  return cam;
+}
+
+std::vector<E::Camera*> E::Camera::cameras;

@@ -3,7 +3,11 @@
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
 
-E::ScreenContext::ScreenContext(E::Camera *cam, GLFWwindow *window) : camera(cam) {
+E::ScreenContext::ScreenContext(GLFWwindow *window, Config *config) {
+  glViewport(0, 0, config->screenWidth, config->screenHeight);
+
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
   ImGui_ImplGlfwGL3_Init(window, false);
   ImGuiIO& io = ImGui::GetIO();
 
@@ -25,5 +29,7 @@ void E::ScreenContext::render(RenderManager *renderer) {
 }
 
 E::View E::ScreenContext::view() {
+  Camera *camera = Camera::main();
+
   return View(camera->projectionMatrix() * camera->viewMatrix());
 }

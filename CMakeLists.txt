@@ -40,10 +40,12 @@ file(GLOB PROJECT_HEADERS
     includes/chunk.hpp
     includes/chunk_mesh.hpp
     includes/data.hpp
+    includes/game.hpp
     includes/game_state.hpp
     includes/vr_state.hpp
     includes/world.hpp
     includes/world_renderer.hpp
+    includes/editor/editor.hpp
     includes/editor/cursor.hpp
     includes/editor/editor_info_pane.hpp
     includes/editor/editor_state.hpp

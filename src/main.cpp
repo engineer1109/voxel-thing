@@ -3,25 +3,33 @@
 
 #include <E/application.hpp>
 
+#include <editor/editor.hpp>
+#include <game.hpp>
+
 #ifdef _WINDOWS
 #   pragma comment(lib, "openvr_api")
 #endif
 
 int main(int argc, char *argv[]) {
+  E::Application *app;
 #ifdef _WINDOWS
-  bool openEditor = false;
+  bool editor = false;
 
   for (int i = 0; i < argc; i++) {
-    std::cout << argv[i] << std::endl;
-    if (std::string(argv[i]) == "editor") openEditor = true;
+    if (std::string(argv[i]) == "editor") editor = true;
   }
 
-  E::Application app(!openEditor);
+  if (editor) {
+    app = new editor::Editor();
+  } else {
+    app = new Game();
+  }
+
 #else
-  E::Application app(false);
+  app = new editor::Editor();
 #endif
 
-  app.loop();
+  app->loop();
 
   return 0;
 }
