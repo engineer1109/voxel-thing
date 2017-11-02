@@ -12,7 +12,7 @@ WorldRenderer::WorldRenderer() {
 }
 
 void WorldRenderer::preRender() {
-  texture->use();
+  world->texture->use();
   shader->use();
 
   shader->setVec3("lightColor", glm::vec3(1.0, 1.0, 1.0));

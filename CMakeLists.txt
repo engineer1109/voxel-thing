@@ -65,6 +65,7 @@ file(GLOB PROJECT_HEADERS
     includes/E/shader.hpp
     includes/E/state.hpp
     includes/E/texture.hpp
+    includes/E/texture_atlas.hpp
     includes/E/utils.hpp
     includes/E/view.hpp
     includes/E/vr_context.hpp
@@ -101,6 +102,7 @@ file(GLOB PROJECT_SOURCES
     src/E/shader.cpp
     src/E/state.cpp
     src/E/texture.cpp
+    src/E/texture_atlas.cpp
     src/E/utils.cpp
     src/E/vr_context.cpp)
 file(GLOB PROJECT_CONFIGS CMakeLists.txt

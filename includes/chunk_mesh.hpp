@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 
 #include <E/mesh.hpp>
+#include <E/texture_atlas.hpp>
 
 #include <block.hpp>
 #include <block_database.hpp>
@@ -18,7 +19,7 @@ const E::VertexAttribList chunkMeshVertexAttribList = {
 
 class ChunkMesh : public E::Mesh {
   public:
-    ChunkMesh(BlockDatabase *bd, ChunkData cd, ChunkData ld);
+    ChunkMesh(BlockDatabase *bd, E::TextureAtlas *ta, ChunkData cd, ChunkData ld);
 
     void generate(ChunkData cd, ChunkData ld);
   private:
@@ -32,6 +33,7 @@ class ChunkMesh : public E::Mesh {
     ChunkData lightData;
 
     BlockDatabase *blocks;
+	 E::TextureAtlas *texture;
 };
 
 #endif

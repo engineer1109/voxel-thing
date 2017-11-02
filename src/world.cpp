@@ -11,6 +11,8 @@
 using json = nlohmann::json;
 
 World::World(std::string fname) {
+  texture = new E::TextureAtlas("img/sontoya.jpg", 256);
+
   std::ifstream dbFile(E::Config::instance()->blockDatabaseFilePath);
   blocks = new BlockDatabase();
   blocks->read(dbFile);

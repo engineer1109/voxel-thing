@@ -23,7 +23,7 @@ void Chunk::refresh() {
 }
 
 void Chunk::push() {
-  mesh = std::make_shared<ChunkMesh>(world->blocks, data, lightData);
+  mesh = std::make_shared<ChunkMesh>(world->blocks, world->texture, data, lightData);
 
   mesh->bind();
 }

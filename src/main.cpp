@@ -6,10 +6,6 @@
 #include <editor/editor.hpp>
 #include <game.hpp>
 
-#ifdef _WINDOWS
-#   pragma comment(lib, "openvr_api")
-#endif
-
 int main(int argc, char *argv[]) {
   E::Application *app;
 #ifdef _WINDOWS

@@ -5,9 +5,10 @@
 #include <memory>
 #include <string>
 
+#include <E/utils.hpp>
+#include <E/texture_atlas.hpp>
 #include <block.hpp>
 #include <chunk.hpp>
-#include <E/utils.hpp>
 #include <block_database.hpp>
 
 constexpr int WORLD_WIDTH = 3;
@@ -26,6 +27,8 @@ class World {
     void save(std::string fname);
 
     BlockDatabase *blocks;
+
+    E::TextureAtlas *texture;
   private:
     bool saveExists(std::string fname);
 };

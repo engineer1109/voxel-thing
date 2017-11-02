@@ -40,6 +40,8 @@ void BlockDatabase::read(std::ifstream& file) {
   while (true) {
     BlockInfo info;
 
+    info.color = glm::vec4(1, 1, 1, 1);
+
     while (getline(file, line)) {
       if (isSeparator(line)) break;
       if (isEmpty(line)) continue;
@@ -52,6 +54,9 @@ void BlockDatabase::read(std::ifstream& file) {
         info.name = pair.val;
       } else if (pair.key == "color") {
         info.color = stringToVec4(pair.val);
+      } else if (pair.key == "coord") {
+        glm::vec2 v2 = stringToVec2(pair.val);
+        info.coord = glm::ivec2(v2.x, v2.y);
       } else if (pair.key == "description") {
         info.description = pair.val;
       } else if (pair.key == "solid") {
@@ -164,6 +169,20 @@ glm::vec4 BlockDatabase::stringToVec4(std::string str) {
 
   v = untilSpace(str);
   p.w = stoi(v);
+
+  return p;
+}
+
+glm::vec2 BlockDatabase::stringToVec2(std::string str) {
+  glm::vec2 p;
+
+  std::string v = untilSpace(str);
+  p.x = stoi(v);
+
+  str = eatSpace(str);
+
+  v = untilSpace(str);
+  p.y = stoi(v);
 
   return p;
 }

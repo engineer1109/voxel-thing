@@ -3,7 +3,9 @@
 #include <iostream>
 #include <glm/gtx/rotate_vector.hpp>
 
-ChunkMesh::ChunkMesh(BlockDatabase *bd, ChunkData cd, ChunkData ld) : Mesh(std::vector<float>(), chunkMeshVertexAttribList) {
+
+ChunkMesh::ChunkMesh(BlockDatabase *bd, E::TextureAtlas *ta, ChunkData cd, ChunkData ld) : Mesh(std::vector<float>(), chunkMeshVertexAttribList) {
+  texture = ta;
   blocks = bd;
 
   generate(cd, ld);
@@ -39,6 +41,8 @@ void ChunkMesh::generate(ChunkData cd, ChunkData ld) {
 }
 
 std::vector<float> ChunkMesh::generateFace(glm::vec3 pos, BlockSide side, BlockType type) {
+  BlockInfo binfo = blocks->get(type);
+
   std::vector<glm::vec3> face = {
     glm::vec3(0.5f,  0.5f, -0.5f), // top right
     glm::vec3(0.5f, -0.5f, -0.5f), // bottom right
@@ -49,15 +53,7 @@ std::vector<float> ChunkMesh::generateFace(glm::vec3 pos, BlockSide side, BlockT
     glm::vec3(-0.5f,  0.5f, -0.5f) // top left
   };
 
-  std::vector<glm::vec2> uvs = {
-    glm::vec2(1.0f, 0.0f),
-    glm::vec2(1.0f, 1.0f),
-    glm::vec2(0.0f, 0.0f),
-
-    glm::vec2(1.0f, 1.0f),
-    glm::vec2(0.0f, 1.0f),
-    glm::vec2(0.0f, 0.0f)
-  };
+  std::vector<glm::vec2> uvs = texture->uvs(binfo.coord);
 
   glm::vec3 rotateAround;
   glm::vec3 normal;
@@ -105,8 +101,6 @@ std::vector<float> ChunkMesh::generateFace(glm::vec3 pos, BlockSide side, BlockT
 
       throw "fuck you";
   }
-
-  BlockInfo binfo = blocks->get(type);
 
   std::vector<float> verts;
 

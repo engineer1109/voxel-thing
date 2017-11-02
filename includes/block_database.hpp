@@ -13,6 +13,7 @@ struct BlockInfo {
   int id;
   std::string name;
   glm::vec4 color;
+  glm::ivec2 coord;
   std::string description;
   bool solid;
 };
@@ -46,6 +47,7 @@ class BlockDatabase {
     std::string eatSpace(std::string line);
 
     glm::vec4 stringToVec4(std::string str);
+    glm::vec2 stringToVec2(std::string str);
 };
 
 #endif
