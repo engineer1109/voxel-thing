@@ -6,6 +6,8 @@
 namespace E {
   class Renderer {
     public:
+      virtual bool shouldRender() {};
+
       virtual void preRender() {};
       virtual void render(View) {};
   };

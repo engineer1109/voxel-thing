@@ -24,6 +24,10 @@ editor::TooltipRenderer::TooltipRenderer() {
   mesh->bind();
 }
 
+bool editor::TooltipRenderer::shouldRender() {
+  return tooltips.size() > 0;
+}
+
 void editor::TooltipRenderer::render(E::View view) {
   shader->use();
 

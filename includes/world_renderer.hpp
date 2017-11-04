@@ -14,6 +14,7 @@ class WorldRenderer : public E::Renderer {
   public:
     WorldRenderer();
 
+    bool shouldRender();
     void preRender();
     void render(E::View view);
 

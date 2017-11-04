@@ -16,6 +16,8 @@ namespace editor {
     public:
       TooltipRenderer();
 
+      bool shouldRender();
+
       void render(E::View view);
 
       void add(Tooltip *t);

@@ -28,7 +28,7 @@ namespace E {
       void changeState(State *s);
       State* nextState();
 
-      Camera camera;
+      Camera *camera;
       Input *input;
       Config *config;
       RenderManager *renderer;

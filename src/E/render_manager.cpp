@@ -1,18 +1,20 @@
 #include <E/render_manager.hpp>
 
+#include <iostream>
+
 E::RenderManager::RenderManager() {
   worldRenderer = new WorldRenderer();
   tooltipRenderer = new editor::TooltipRenderer();
 }
 
 void E::RenderManager::preRender() {
-  worldRenderer->preRender();
-  tooltipRenderer->preRender();
+  if (tooltipRenderer->shouldRender()) tooltipRenderer->preRender();
+  if (worldRenderer->shouldRender()) worldRenderer->preRender();
 }
 
 void E::RenderManager::render(View view) {
-  worldRenderer->render(view);
-  tooltipRenderer->render(view);
+  if (worldRenderer->shouldRender()) worldRenderer->render(view);
+  if (tooltipRenderer->shouldRender()) tooltipRenderer->render(view);
 }
 
 void E::RenderManager::add(World *w) {

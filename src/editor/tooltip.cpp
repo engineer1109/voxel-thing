@@ -11,8 +11,8 @@ void editor::Tooltip::init() {
 void editor::Tooltip::tick(float dt) {
   getBlockToPlace();
 
-  glm::vec3 p = state->camera.screenToDirection(glm::vec2(state->input->mouseX, state->input->mouseY));
-  E::RayHit ray = state->world->ray(*state->camera.position, p);
+  glm::vec3 p = state->camera->screenToDirection(glm::vec2(state->input->mouseX, state->input->mouseY));
+  E::RayHit ray = state->world->ray(*state->camera->position, p);
 
   if (!ray.didHit) {
     shouldRender = false;

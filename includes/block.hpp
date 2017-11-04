@@ -2,6 +2,7 @@
 #define BLOCK_H
 
 #include <vector>
+#include <glm/glm.hpp>
 
 enum BlockSide {
   TOP,

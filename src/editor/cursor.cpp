@@ -5,8 +5,8 @@
 #include <E/state.hpp>
 
 void editor::Cursor::init() {
-  state->camera.position = &position;
-  state->camera.facing = &facing;
+  state->camera->position = &position;
+  state->camera->facing = &facing;
 }
 
 void editor::Cursor::tick(float dt) {

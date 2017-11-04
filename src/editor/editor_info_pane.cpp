@@ -16,8 +16,8 @@ void editor::EditorInfoPane::tick(float dt) {
 
   ImGui::Text("Camera");
   ImGui::Indent(10.0f);
-  ImGui::Text("position: (%.1f,%.1f,%.1f)", state->camera.position->x, state->camera.position->y, state->camera.position->y);
-  ImGui::Text("facing: (%.1f,%.1f,%.1f)", state->camera.facing->x, state->camera.facing->y, state->camera.facing->y);
+  ImGui::Text("position: (%.1f,%.1f,%.1f)", state->camera->position->x, state->camera->position->y, state->camera->position->y);
+  ImGui::Text("facing: (%.1f,%.1f,%.1f)", state->camera->facing->x, state->camera->facing->y, state->camera->facing->y);
 
   ImGui::Unindent();
 

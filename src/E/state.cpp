@@ -1,6 +1,8 @@
 #include <E/state.hpp>
 
 E::State::State(Config *c, Input *i) : config(c), input(i) {
+  camera = Camera::main();
+
   renderer = new RenderManager();
 };
 

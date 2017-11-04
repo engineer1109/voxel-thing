@@ -11,6 +11,10 @@ WorldRenderer::WorldRenderer() {
   texture = new E::Texture("img/gray.jpeg");
 }
 
+bool WorldRenderer::shouldRender() {
+  return world != NULL;
+}
+
 void WorldRenderer::preRender() {
   world->texture->use();
   shader->use();
