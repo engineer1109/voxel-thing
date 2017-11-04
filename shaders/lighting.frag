@@ -33,4 +33,6 @@ void main() {
     vec3 color = texture(texture1, TexCoord).xyz;
 
 	FragColor = vec4(color * (ambient + diffuse + specular), 1.0) * Color;
+
+    FragColor.rgb = pow(FragColor.rgb, vec3(1.0/2.2));
 }
